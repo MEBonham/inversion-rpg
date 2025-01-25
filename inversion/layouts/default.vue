@@ -11,7 +11,7 @@ defineProps(['hidePage']);
 <style scoped>
 main#page {
     flex-grow: 1;
-    background-image: url("~/assets/bgs/geometric.png"), linear-gradient(to bottom right, skyblue, deepskyblue);
+    background-image: url("~/assets/bgs/parchment.png");
 
     &.hide {
         display: none;

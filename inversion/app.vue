@@ -3,7 +3,7 @@ import { useMediaQuery } from "@vueuse/core";
 import MobileOverlay from './components/MobileOverlay.vue';
 
 useHead({
-    title: "McKay",
+    title: "InversioN RPG",
 });
 
 const { mobileWidthPx } = useAppConfig();
@@ -30,7 +30,7 @@ div.envelope {
     height: calc(100dvh - 1.4rem);
     margin: 0.7rem;
     border-radius: 1.8rem;
-    box-shadow: 0 0 0.5rem blue;
+    box-shadow: 0 0 0.5rem turquoise;
     overflow: hidden;
     display: flex;
     flex-direction: row;

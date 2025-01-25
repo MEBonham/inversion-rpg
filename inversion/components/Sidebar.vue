@@ -1,8 +1,7 @@
 
 <template>
     <aside>
-        <MePortrait />
-        <h1>McKay Bonham</h1>
+        <h1>InversioN RPG</h1>
     </aside>
 </template>
 
@@ -11,7 +10,9 @@ aside {
     width: 36%;
     height: 100%;
     z-index: 10;
+    background-color: saddlebrown;
     background-image: url("~/assets/bgs/woodTexture.png");
+    color: whitesmoke;
     box-shadow: 0 0 0.5rem saddlebrown;
     display: flex;
     flex-direction: column;

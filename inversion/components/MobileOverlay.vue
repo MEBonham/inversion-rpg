@@ -19,10 +19,9 @@ const localOpen = computed({
                     <HamburgerIcon dimension="3rem" />
                 </button>
             </CollapsibleTrigger>
-            <h1>McKay Bonham</h1>
+            <h1>InversioN RPG</h1>
         </header>
         <CollapsibleContent as="nav">
-            <MePortrait />
         </CollapsibleContent>
     </CollapsibleRoot>
 </template>
@@ -31,8 +30,10 @@ const localOpen = computed({
 div#mobileOverlay {
     width: 100%;
     z-index: 10;
+    background-color: saddlebrown;
     background-image: url("~/assets/bgs/woodTexture.png");
     box-shadow: 0 0 0.5rem saddlebrown;
+    color: whitesmoke;
     display: flex;
     flex-direction: column;
     transition: height 0.3s ease;
