@@ -12,33 +12,9 @@
 }
 
 :root {
-    /* Light theme colors */
-    --mainBackground: hsla(0, 0%, 94%, 0.68);
-    --opaqueBackground: hsl(0, 0%, 94%);
-    --mainContrast: hsl(0, 0%, 6%);
-    --popColor: hsl(148, 79%, 76%);
-    --popColorHover: hsl(148, 53%, 57%);
-    --linkColor: hsl(148, 79%, 25%);
-    --sectionBubble: hsla(148, 53%, 57%, 0.2);
-    --warningColor: hsl(0, 100%, 30%);
-
-    /* Layout Constants */
-    --maxContentWidth: 1400px;
-    --mainNavWidth: 4.7rem;
-
-    /* Initial layout before programmatic checks */
-    --sidebarWidth: 36%;
-}
-:root[data-theme="dark"] {
-    /* Dark theme colors */
-    --mainBackground: hsla(0, 0%, 6%. 0.68);
-    --opaqueBackground: hsl(0, 0%, 6%);
-    --mainContrast: hsl(0, 0%, 94%);
-    --popColor: hsl(148, 68%, 43%);
-    --popColorHover: hsl(148, 59%, 53%);
-    --linkColor: hsl(148, 79%, 82%);
-    --sectionBubble: hsla(148, 59%, 53%, 0.2);
-    --warningColor: hsl(0, 100%, 60%);
+    --parchment: hsl(44, 40%, 81%);
+    --invertParchment: hsl(231, 42%, 6%);
+    --torquoise: hsl(190, 37%, 63%);
 }
 
 html {

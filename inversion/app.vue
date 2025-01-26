@@ -30,7 +30,7 @@ div.envelope {
     height: calc(100dvh - 1.4rem);
     margin: 0.7rem;
     border-radius: 1.8rem;
-    box-shadow: 0 0 0.5rem turquoise;
+    box-shadow: 0 0 1.0rem var(--torquoise);
     overflow: hidden;
     display: flex;
     flex-direction: row;

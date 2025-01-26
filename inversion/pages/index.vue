@@ -1,20 +1,29 @@
 
 <template>
-    <header>
-        <h1>Home Page</h1>
-    </header>
+    <main id="page">
+        <header>
+            <h1>Home Page</h1>
+        </header>
+    </main>
 </template>
 
 <style scoped>
-header {
+main#page {
     width: 100%;
-    padding: 1.0rem 0;
+    flex-grow: 1;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
 
-    & h1 {
-        font-size: 3.4rem;
+    header {
+        width: 100%;
+        padding: 1.0rem 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    
+        & h1 {
+            font-size: 3.4rem;
+        }
     }
 }
 </style>

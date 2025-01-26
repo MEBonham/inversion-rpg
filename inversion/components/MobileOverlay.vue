@@ -1,5 +1,7 @@
 <script setup>
 import { CollapsibleRoot, CollapsibleTrigger, CollapsibleContent } from 'radix-vue';
+import HomeLogoLink from './HomeLogoLink.vue';
+import ToC from './ToC.vue';
 import HamburgerIcon from './icons/HamburgerIcon.vue';
 
 const props = defineProps(["mobileOverlayOpen"]);
@@ -12,16 +14,21 @@ const localOpen = computed({
 </script>
 
 <template>
-    <CollapsibleRoot id="mobileOverlay" v-model:open="localOpen" :class="{ open: localOpen }">
+    <CollapsibleRoot id="mobileOverlay" v-model:open="localOpen">
         <header>
+            <CornerGear classes="top left" />
+            <CornerGear classes="top right" />
             <CollapsibleTrigger as-child>
                 <button @click="localOpen = !localOpen">
                     <HamburgerIcon dimension="3rem" />
                 </button>
             </CollapsibleTrigger>
-            <h1>InversioN RPG</h1>
+            <HomeLogoLink :isBig="false" />
         </header>
         <CollapsibleContent as="nav">
+            <CornerGear classes="bottom left" />
+            <CornerGear classes="bottom right" />
+            <ToC />
         </CollapsibleContent>
     </CollapsibleRoot>
 </template>
@@ -30,10 +37,10 @@ const localOpen = computed({
 div#mobileOverlay {
     width: 100%;
     z-index: 10;
-    background-color: saddlebrown;
-    background-image: url("~/assets/bgs/woodTexture.png");
-    box-shadow: 0 0 0.5rem saddlebrown;
-    color: whitesmoke;
+    background-color: var(--invertParchment);
+    background-image: url("~/assets/bgs/clockwork.png");
+    box-shadow: 0 0 0.5rem var(--invertParchment);
+    color: var(--parchment);
     display: flex;
     flex-direction: column;
     transition: height 0.3s ease;
@@ -63,9 +70,11 @@ div#mobileOverlay {
     & nav {
         width: 100%;
         flex-grow: 1;
+        padding: 0 3.4rem;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
+        gap: 0.4rem;
     }
 }
 </style>

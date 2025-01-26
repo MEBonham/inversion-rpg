@@ -9,4 +9,5 @@ export default defineNuxtConfig({
     modules: [
         "@vueuse/nuxt",
     ],
+    pages: true,
 });
