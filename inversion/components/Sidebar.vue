@@ -19,11 +19,12 @@ import ToC from './ToC.vue';
 <style scoped>
 aside {
     position: relative;
-    width: 30%;
+    min-width: 30%;
     height: 100%;
     z-index: 10;
     background-color: var(--invertParchment);
     background-image: url("~/assets/bgs/clockwork.png");
+    background-position: center;
     color: var(--parchment);
     box-shadow: 0 0 0.5rem var(--invertParchment);
     overflow: hidden;

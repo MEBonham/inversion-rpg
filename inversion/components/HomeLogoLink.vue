@@ -10,7 +10,7 @@ const { isBig } = defineProps(["isBig"]);
 
 <style scoped>
 a {
-    padding: 0 1.0rem;
+    padding: 0 1.0rem 0 1.8rem;
     max-width: 16.0rem;
     border-radius: 50%;
     background-color: var(--parchment);

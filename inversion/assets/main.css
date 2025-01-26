@@ -1,25 +1,33 @@
 @font-face {
-    font-family: "Akaya";
-    src: url("/fonts/akaya-telivigala-v22.woff2") format("woff");
+    font-family: "CrimsonPro";
+    src: url("/fonts/CrimsonPro-VariableFont_wght.woff2") format("woff");
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
-    font-family: "Runde";
-    src: url("/fonts/OpenRunde-Bold.woff2") format("woff");
-    font-weight: bold;
+    font-family: "Girassol";
+    src: url("/fonts/Girassol-Regular.woff2") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Postamt";
+    src: url("/fonts/Postamt.woff2") format("woff");
+    font-weight: normal;
     font-style: normal;
 }
 
 :root {
     --parchment: hsl(44, 40%, 81%);
     --invertParchment: hsl(231, 42%, 6%);
-    --torquoise: hsl(190, 37%, 63%);
+    --lightTorquoise: hsl(190, 37%, 63%);
+    --headerColor: hsl(197.5, 77.42%, 22.94%);
+    --boldTorquoise: hsl(190, 67.5%, 37.6%);
 }
 
 html {
     font-size: 62.5%;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "CrimsonPro", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 code, pre {
@@ -49,7 +57,7 @@ em {
     background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: var(--sectionBubble);
+    background-color: var(--lightTorquoise);
     border-radius: 20px;
     border: 4px solid transparent;
     background-clip: content-box;
@@ -61,12 +69,21 @@ em {
 body {
     width: 100dvw;
     height: 100dvh;
-    font-size: 1.6rem;
-    line-height: 1.5;
+    font-size: 2.0rem;
+    line-height: 1.4;
     
     & > div#__nuxt {
         width: 100%;
         height: 100%;
         overflow: hidden;
     }
+}
+
+h1 {
+    font-family: "Girassol", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--headerColor);
+}
+
+p {
+    margin: 0.6rem 0;
 }

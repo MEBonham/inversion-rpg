@@ -17,7 +17,7 @@ const hidePage = computed(() => isMobile && mobileOverlayOpen);
         <NuxtRouteAnnouncer />
         <MobileOverlay v-if="isMobile" v-model:mobileOverlayOpen="mobileOverlayOpen" />
         <Sidebar v-else />
-        <NuxtLayout :hidePage="hidePage.value">
+        <NuxtLayout :hidePage="hidePage.value" :vStretch="!isMobile">
             <NuxtPage />
         </NuxtLayout>
     </div>
@@ -30,7 +30,7 @@ div.envelope {
     height: calc(100dvh - 1.4rem);
     margin: 0.7rem;
     border-radius: 1.8rem;
-    box-shadow: 0 0 1.0rem var(--torquoise);
+    box-shadow: 0 0 1.0rem var(--boldTorquoise);
     overflow: hidden;
     display: flex;
     flex-direction: row;

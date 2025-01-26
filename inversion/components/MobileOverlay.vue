@@ -39,6 +39,7 @@ div#mobileOverlay {
     z-index: 10;
     background-color: var(--invertParchment);
     background-image: url("~/assets/bgs/clockwork.png");
+    background-position: center;
     box-shadow: 0 0 0.5rem var(--invertParchment);
     color: var(--parchment);
     display: flex;

@@ -1,21 +1,26 @@
 
 <template>
-    <p>
-        <a href="/settings">Account Settings</a>
-    </p>
-    <p>
-        <a href="/campaigns">Campaigns</a>
-    </p>
-    <p>
-        <a href="/characters">Characters</a>
-    </p>
-    <p>
-        <a href="/play">Play InversioN</a>
-    </p>
-    <p>
-        <a href="/login">Login/Register</a>
-    </p>
+    <ul>
+        <li>
+            <NuxtLink to="/settings">Account & Settings</NuxtLink>
+        </li>
+        <li>
+            <NuxtLink to="/campaigns">Campaigns</NuxtLink>
+        </li>
+        <li>
+            <NuxtLink to="/characters">Characters</NuxtLink>
+        </li>
+        <li>
+            <NuxtLink to="/play">Play InversioN</NuxtLink>
+        </li>
+        <li>
+            <NuxtLink to="/login">Login/Register</NuxtLink>
+        </li>
+    </ul>
 </template>
 
 <style scoped>
+li {
+    margin: 0.6rem 0;
+}
 </style>
