@@ -79,7 +79,7 @@ main {
 
                 & header {
                     width: 100%;
-                    padding: 1.0rem 0;
+                    padding: 2.2rem 0 1.0rem;
                     display: flex;
                     justify-content: center;
                     align-items: center;
