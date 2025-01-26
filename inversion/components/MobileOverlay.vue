@@ -36,6 +36,7 @@ const localOpen = computed({
 <style scoped>
 div#mobileOverlay {
     width: 100%;
+    min-height: 13.0rem;
     z-index: 10;
     background-color: var(--invertParchment);
     background-image: url("~/assets/bgs/clockwork.png");
@@ -44,10 +45,14 @@ div#mobileOverlay {
     color: var(--parchment);
     display: flex;
     flex-direction: column;
-    transition: height 0.3s ease;
+    transition: min-height 0.3s ease;
 
     &[data-state="open"] {
-        height: 100%;
+        min-height: 100%;
+
+        & nav {
+            flex-grow: 1;
+        }
     }
 
     & > header {
@@ -70,12 +75,13 @@ div#mobileOverlay {
     }
     & nav {
         width: 100%;
-        flex-grow: 1;
+        height: 0;
         padding: 0 3.4rem;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         gap: 0.4rem;
+        transition: height 0.3s ease;
     }
 }
 </style>

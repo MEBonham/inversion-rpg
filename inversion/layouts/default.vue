@@ -26,12 +26,17 @@ defineProps(["hidePage", "vStretch"]);
 main {
     flex-grow: 1;
     overflow-y: auto;
+    transition: height 0.3s ease;
 
     &.vStretch {
         height: 100%;
     }
     &.hide {
-        display: none;
+        height: 0;
+
+        & > :deep(div[data-radix-scroll-area-viewport]) {
+            display: none;
+        }
     }
 
     & > img.left {
