@@ -15,6 +15,10 @@ defineProps(["hidePage", "vStretch"]);
         <ScrollAreaScrollbar orientation="vertical">
             <ScrollAreaThumb />
         </ScrollAreaScrollbar>
+        <img src="~/assets/Left Frills.png" alt="frill" class="left" />
+        <img src="~/assets/Right Frills.png" alt="frill" class="right" />
+        <img src="~/assets/Background Gear Left.png" alt="rivet" class="cornerLeft" />
+        <img src="~/assets/Background Gear Right.png" alt="rivet" class="cornerRight" />
     </ScrollAreaRoot>
 </template>
 
@@ -30,6 +34,30 @@ main {
         display: none;
     }
 
+    & > img.left {
+        position: absolute;
+        top: 5.0rem;
+        left: 0.6rem;
+        height: calc(100% - 5.0rem);
+    }
+    & > img.right {
+        position: absolute;
+        top: 5.0rem;
+        right: 0.6rem;
+        height: calc(100% - 5.0rem);
+    }
+    & > img.cornerLeft {
+        position: absolute;
+        top: 0.4rem;
+        left: 0.4rem;
+        height: 6.0rem;
+    }
+    & > img.cornerRight {
+        position: absolute;
+        top: 0.4rem;
+        right: 0.4rem;
+        height: 6.0rem;
+    }
     & > :deep(div[data-radix-scroll-area-viewport]) {
         width: 100%;
         height: 100%;
@@ -45,7 +73,7 @@ main {
                 background-image: url("~/assets/bgs/parchment.png");
                 background-size: cover;
                 background-position: center;
-                padding: 0.8rem 3.6rem 1.6rem;
+                padding: 0.8rem 4.4rem 1.6rem;
                 display: flex;
                 flex-direction: column;
 
