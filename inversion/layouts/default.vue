@@ -73,7 +73,7 @@ main {
                 background-image: url("~/assets/bgs/parchment.png");
                 background-size: cover;
                 background-position: center;
-                padding: 0.8rem 4.4rem 1.6rem;
+                padding: 0.8rem 6.4rem 1.6rem;
                 display: flex;
                 flex-direction: column;
 
