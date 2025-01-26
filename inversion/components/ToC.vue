@@ -2,9 +2,6 @@
 <template>
     <ul>
         <li>
-            <NuxtLink to="/settings">Account & Settings</NuxtLink>
-        </li>
-        <li>
             <NuxtLink to="/campaigns">Campaigns</NuxtLink>
         </li>
         <li>
@@ -12,6 +9,9 @@
         </li>
         <li>
             <NuxtLink to="/play">Play InversioN</NuxtLink>
+        </li>
+        <li>
+            <NuxtLink to="/settings">Account & Settings</NuxtLink>
         </li>
         <li>
             <NuxtLink to="/login">Login/Register</NuxtLink>
