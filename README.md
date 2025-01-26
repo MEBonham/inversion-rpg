@@ -4,7 +4,7 @@
 ## Put Off
 4. Clean all imports up with absolute paths
 7. copy `emit` structure from zwolf/components/AppHeader.vue
-8. 
+9. Transition animation of Overlay height
 ## Layout
 3. Title spacing
 ## Nav
