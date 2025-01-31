@@ -7,6 +7,9 @@
 
 ## Layout
 ## Nav
+- Login link to disappear during Session
 ## Auth
+- Logout
+- Register username
 ## Database
 ## 

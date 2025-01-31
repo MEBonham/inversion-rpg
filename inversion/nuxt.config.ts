@@ -8,6 +8,18 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
     modules: [
         "@vueuse/nuxt",
+        "@nuxtjs/supabase",
     ],
     pages: true,
+    supabase: {
+        redirectOptions: {
+            login: "/login",
+            callback: "/confirm",
+            exclude: [
+                "/",
+                "/settings",
+                "/characters",
+            ],
+        },
+    },
 });
