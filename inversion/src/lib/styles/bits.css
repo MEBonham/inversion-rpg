@@ -40,6 +40,10 @@ div[data-scroll-area-root] {
 }
 div[data-scroll-area-viewport] {
     height: 100%;
+
+    & div[data-scroll-area-content] {
+        height: 100%;
+    }
 }
 div[data-scroll-area-root].main {
     flex-grow: 1;
