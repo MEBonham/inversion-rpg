@@ -1,0 +1,54 @@
+@font-face {
+    font-family: "CrimsonPro";
+    src: url("/fonts/CrimsonPro-VariableFont_wght.woff2") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Girassol";
+    src: url("/fonts/Girassol-Regular.woff2") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Postamt";
+    src: url("/fonts/Postamt.woff2") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --parchment: hsl(43, 39%, 88%);
+    --invertParchment: hsl(231, 42%, 6%);
+    --lightTorquoise: hsl(190, 37%, 63%);
+    --headerColor: hsl(197.5, 77.42%, 22.94%);
+    --boldTorquoise: hsl(190, 67.5%, 37.6%);
+    --warningColor: hsl(0, 100%, 30%);
+}
+
+html {
+    font-size: 62.5%;
+    font-family: "CrimsonPro", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+code, pre {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+strong, th {
+    font-weight: 600;
+}
+
+em {
+    font-style: italic;
+}
+
+button,
+summary,
+.clickable {
+    cursor: pointer;
+}
+
+.warning {
+    color: var(--warningColor);
+}

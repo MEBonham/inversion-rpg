@@ -1,0 +1,66 @@
+/* Collapsible */
+div[data-collapsible-root].mainOverlay {
+    position: absolute;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+
+    & div[data-collapsible-content] {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.5s linear;
+    }
+    & div[data-collapsible-content][data-state="open"] {
+        height: calc(100dvh - 1.4rem - var(--overlayHeaderHeight));
+        background-color: var(--invertParchment);
+    }
+}
+
+/* Dropdown Menu */
+div[data-dropdown-menu-content] {
+    background-color: var(--parchment);
+    border-radius: 0.6rem;
+    box-shadow: 0 0 0.6rem var(--invertParchment);
+    padding: 0.2rem 0;
+
+    & div[data-dropdown-menu-item] {
+        padding: 0.2rem 0.6rem;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--lightTorquoise);
+        }
+    }
+}
+
+/* ScrollArea */
+div[data-scroll-area-root] {
+    max-width: 100%;
+    overflow-y: hidden;
+}
+div[data-scroll-area-viewport] {
+    height: 100%;
+}
+
+/* Tabs */
+div[data-tabs-root].normal {
+    width: 100%;
+    border-radius: 0.8rem;
+    background-color: var(--lightTorquoise);
+
+    & div[data-tabs-list] {
+        margin: 0 0.4rem;
+        padding: 0.4rem 0.2rem;
+        border-bottom: 1px solid var(--invertParchment);
+        display: flex;
+        justify-content: space-between;
+    }
+    & div[data-tabs-content] {
+        padding: 0.8rem 1.2rem;
+    }
+}
+
+/* Tooltip */
+.siteNavArrow {
+    color: var(--parchment);
+}
