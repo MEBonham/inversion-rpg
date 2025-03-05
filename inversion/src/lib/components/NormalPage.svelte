@@ -26,10 +26,6 @@
         background-size: cover;
         padding: 0.6rem 6.0rem 0.4rem;
 
-        &.mobileMode {
-            margin-top: var(--overlayHeaderHeight);
-        }
-
         & header {
             width: 100%;
             display: flex;

@@ -83,7 +83,12 @@
 
             &.mobileMode {
                 flex-direction: column;
+
+                & :global(div.main.mobileMode) {
+                    margin-top: var(--overlayHeaderHeight);
+                }
             }
+
             & div#loadingScreen {
                 position: absolute;
                 top: 0;
