@@ -1,5 +1,9 @@
 <script>
+    import { page } from "$app/stores";
     import { modes } from "$lib/store.svelte.js";
+
+    const { data } = $page;
+    let profile = $derived(data.profile);
 </script>
 
 <nav class={modes.isOnMobile && modes.mobileOverlayOpen ? "open" : ""}>
@@ -13,12 +17,15 @@
         <li>
             <a href="/play">Play Inversion</a>
         </li>
-        <li>
-            <a href="/settings">Account & Settings</a>
-        </li>
-        <li>
-            <a href="/login">Login/Register</a>
-        </li>
+        {#if profile && profile.privilege > 0}
+            <li>
+                <a href="/settings">Account & Settings</a>
+            </li>
+        {:else}
+            <li>
+                <a href="/login">Login/Register</a>
+            </li>
+        {/if}
     </ul>
 </nav>
 

@@ -7,6 +7,7 @@
     import "$lib/styles/reset.css";
     import "$lib/styles/main.css";
     import "$lib/styles/bits.css";
+    import { sleep } from "$lib/utils.js";
     import { MOBILE_WIDTH } from "$lib/constants";
     import { modes } from "$lib/store.svelte.js";
     import Sidebar from "./Sidebar.svelte";
@@ -29,6 +30,9 @@
     let mobileView = $derived(screenWidth <= MOBILE_WIDTH);
     $effect(() => {
         modes.setIsOnMobile(mobileView);
+        sleep(0.1).then(() => {
+            document.querySelector('#loadingScreen').style.setProperty("display", "none");
+        });
     });
 </script>
 
@@ -44,7 +48,7 @@
     {:else}
         <Sidebar />
     {/if}
-    <ScrollArea.Root class="main">
+    <ScrollArea.Root class={`main${modes.isOnMobile ? " mobileMode" : " desktopMode"}`}>
         <ScrollArea.Viewport>
             {@render children()}
             <AppFooter />
@@ -53,6 +57,7 @@
             <ScrollArea.Thumb />
         </ScrollArea.Scrollbar>
     </ScrollArea.Root>
+    <div id="loadingScreen"></div>
 </div>
 
 <style>
@@ -78,6 +83,19 @@
 
             &.mobileMode {
                 flex-direction: column;
+            }
+            & div#loadingScreen {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--parchment);
+                background-image: url("/Title Logo.png");
+                background-position: center;
+                background-size: contain;
+                background-repeat: no-repeat;
+                z-index: 1000;
             }
         }
     }

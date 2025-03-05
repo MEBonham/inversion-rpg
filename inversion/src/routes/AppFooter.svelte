@@ -1,8 +1,13 @@
 <script>
     import { modes } from "$lib/store.svelte.js";
+    
+    let appFooterHeight = $state();
+    $effect(() => {
+        document.querySelector(':root').style.setProperty("--appFooterHeight", `${appFooterHeight}px`);
+    });
 </script>
 
-<footer>
+<footer bind:clientHeight={appFooterHeight}>
     <a href="https://gabyno.itch.io/inversion-rpg" target="_blank" rel="noopener noreferrer">Get Inversion RPG</a>
 </footer>
 

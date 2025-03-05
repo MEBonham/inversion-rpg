@@ -11,7 +11,7 @@
     </section>
     <section>
         <h2>What Is This Place?</h2>
-        <p>Inversion is a Tabletop Role-Playing Game, which you can download the rules for at a price of your choosing. The link to do so is at the bottom of every page of this site.</p>
+        <p>Inversion is a Tabletop Role-Playing Game, for which you can download the rules at a price of your choosing. The link to do so is at the bottom of every page of this site.</p>
         <p>This site is to help you build and play Inversion characters with the power of automation.</p>
     </section>
 </NormalPage>

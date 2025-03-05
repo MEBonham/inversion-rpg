@@ -41,6 +41,20 @@ div[data-scroll-area-root] {
 div[data-scroll-area-viewport] {
     height: 100%;
 }
+div[data-scroll-area-root].main {
+    flex-grow: 1;
+
+    &.mobileMode {
+        width: 100%;
+    }
+    &.desktopMode {
+        height: 100%;
+
+        & main#page {
+            min-height: calc(100% - var(--appFooterHeight));
+        }
+    }
+}
 
 /* Tabs */
 div[data-tabs-root].normal {
