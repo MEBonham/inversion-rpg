@@ -1,4 +1,6 @@
 <script>
+    import BufferDot from "$lib/components/BufferDot.svelte";
+    import DiscordIcon from "$lib/components/icons/DiscordIcon.svelte";
     import { modes } from "$lib/store.svelte.js";
     
     let appFooterHeight = $state();
@@ -8,6 +10,10 @@
 </script>
 
 <footer bind:clientHeight={appFooterHeight}>
+    <a class="icon" href="https://discord.com" target="_blank" rel="noopener noreferrer">
+        <DiscordIcon size="2.0rem" />
+    </a>
+    <BufferDot />
     <a href="https://gabyno.itch.io/inversion-rpg" target="_blank" rel="noopener noreferrer">Get Inversion RPG</a>
 </footer>
 
@@ -20,5 +26,11 @@
         box-shadow: 0 0 0.4rem var(--lightTorquoise);
         display: flex;
         justify-content: center;
+        align-items: center;
+        color: var(--invertParchment);
+
+        & a.icon {
+            height: 2.0rem;
+        }
     }
 </style>

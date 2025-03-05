@@ -34,6 +34,17 @@
             document.querySelector('#loadingScreen').style.setProperty("display", "none");
         });
     });
+
+    $effect(() => {
+        if (window.localStorage.getItem("inversion-dark-mode") === null) {
+            window.localStorage.setItem("inversion-dark-mode",
+                window.matchMedia("(prefers-color-scheme: dark)").matches ? "true" : "false"
+            );
+        }
+        if (window.localStorage.getItem("inversion-dark-mode") === "true") {
+            document.querySelector(':root').classList.add("darkMode");
+        }
+    });
 </script>
 
 <svelte:head>
@@ -65,6 +76,7 @@
         width: 100dvw;
         font-size: 2.0rem;
         line-height: 1.4;
+        color: var(--invertParchment);
 
         & h1 {
             font-family: "Girassol", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;

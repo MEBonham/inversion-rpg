@@ -5,10 +5,13 @@
 </script>
 
 <main id="page" class={modes.isOnMobile ? "mobileMode" : ""}>
+    <div id="darkModeBlanket"></div>
     <header>
         <h1>{title}</h1>
     </header>
-    {@render children()}
+    <div id="liftPageContent">
+        {@render children()}
+    </div>
     <img src="/bgs/Left%20Frills.png" alt="frill" class="left" />
     <img src="/bgs/Right%20Frills.png" alt="frill" class="right" />
     <img src="/bgs/Background%20Gear%20Left.png" alt="rivet" class="cornerLeft" />
@@ -20,13 +23,13 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        gap: 1.4rem;
         background-color: var(--parchment);
         background-image: url("/bgs/parchment.png");
         background-size: cover;
         padding: 0.6rem 6.0rem 0.4rem;
 
-        & header {
+        & > header {
+            z-index: 1;
             width: 100%;
             display: flex;
             justify-content: center;
@@ -35,6 +38,12 @@
                 margin-top: 1.6rem;
                 font-size: 4.0rem;
             }
+        }
+        & div#liftPageContent {
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
         }
         & :global(h2) {
             font-size: 2.8rem;
@@ -66,5 +75,19 @@
         top: 0.4rem;
         right: 0.4rem;
         height: 6.0rem;
+    }
+
+    :root #darkModeBlanket {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+    :root.darkMode #darkModeBlanket {
+        display: block;
+        background-color: hsla(0, 0%, 0%, 0.8);
+        z-index: 0;
     }
 </style>
