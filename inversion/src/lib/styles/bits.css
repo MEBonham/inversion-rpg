@@ -52,7 +52,7 @@ div[data-scroll-area-root].main {
         width: 100%;
 
         & main#page {
-            min-height: calc(100% - var(--overlayHeaderHeight) - var(--appFooterHeight));
+            min-height: calc(100% - var(--appFooterHeight));
         }
     }
     &.desktopMode {
