@@ -45,6 +45,8 @@
             top: 50%;
             left: 1.6rem;
             transform: translateY(-50%);
+            width: 3rem;
+            height: 3rem;
         }
     }
 </style>
