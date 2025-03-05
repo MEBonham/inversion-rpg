@@ -10,11 +10,11 @@
     let profile = $derived(data.profile);
     let loading = $state(false);
 
-    let darkMode = $state(document?.querySelector(':root')?.classList.contains("darkMode"));
-    $effect(() => {
+    let darkMode = $state(typeof document !== "undefined" && document?.querySelector(':root')?.classList.contains("darkMode"));
+    const handleToggle = () => {
         document.querySelector(':root').classList.toggle("darkMode", darkMode);
         window.localStorage.setItem("inversion-dark-mode", darkMode ? "true" : "false");
-    });
+    }
 </script>
 
 <NormalPage title={`Welcome, ${profile?.username || session?.user?.email || "guest"}!`}>
@@ -31,7 +31,7 @@
     <section>
         <h2 id="darkModeHeader">
             Dark Mode:
-            <Toggle.Root bind:pressed={darkMode}>
+            <Toggle.Root bind:pressed={darkMode} onPressedChange={handleToggle}>
                 {#snippet child({ props })}
                     <button {...props}>
                         {#if darkMode}

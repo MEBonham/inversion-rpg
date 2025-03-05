@@ -30,7 +30,7 @@
     let mobileView = $derived(screenWidth <= MOBILE_WIDTH);
     $effect(() => {
         modes.setIsOnMobile(mobileView);
-        sleep(0.1).then(() => {
+        sleep(0.2).then(() => {
             document.querySelector('#loadingScreen').style.setProperty("display", "none");
         });
     });
