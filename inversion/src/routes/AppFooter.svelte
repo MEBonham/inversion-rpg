@@ -10,7 +10,7 @@
 </script>
 
 <footer bind:clientHeight={appFooterHeight}>
-    <a class="icon" href="https://discord.com" target="_blank" rel="noopener noreferrer">
+    <a class="icon" href="https://discord.gg/GGruKDNBun" target="_blank" rel="noopener noreferrer">
         <DiscordIcon size="2.0rem" />
     </a>
     <BufferDot />
