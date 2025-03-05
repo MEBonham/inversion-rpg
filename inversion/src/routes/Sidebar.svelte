@@ -3,7 +3,7 @@
     import ToC from "./ToC.svelte";
 </script>
 
-<aside>
+<aside id="appSidebar">
     <HomeLogoLink />
     <ToC />
 </aside>

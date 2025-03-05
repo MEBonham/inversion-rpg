@@ -6,6 +6,7 @@
     import ToC from "./ToC.svelte";
 
     let overlayOpen = $state(false);
+    const closeFct = () => overlayOpen = false;
     let overlayHeaderHeight = $state();
     $effect(() => {
         modes.setMobileOverlayOpen(overlayOpen);
@@ -29,7 +30,7 @@
     <Collapsible.Content>
         {#snippet child({ props })}
             <div {...props}>
-                <ToC />
+                <ToC {closeFct} />
             </div>
         {/snippet}
     </Collapsible.Content>

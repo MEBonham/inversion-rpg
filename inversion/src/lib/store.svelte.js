@@ -11,6 +11,11 @@ const modeManager = () => {
         mobileOverlayOpen = !mobileOverlayOpen;
     }
 
+    let diceRollerMode = $state(false);
+    const setDiceRollerMode = (newDiceRollerMode) => {
+        diceRollerMode = newDiceRollerMode;
+    }
+
     return {
         get isOnMobile() {
             return isOnMobile;
@@ -20,7 +25,11 @@ const modeManager = () => {
             return mobileOverlayOpen;
         },
         setMobileOverlayOpen,
-        toggleMobileOverlayOpen
+        toggleMobileOverlayOpen,
+        get diceRollerMode() {
+            return diceRollerMode;
+        },
+        setDiceRollerMode,
     };
 }
 export const modes = modeManager();

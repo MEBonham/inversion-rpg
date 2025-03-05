@@ -46,6 +46,10 @@ div[data-scroll-area-root].main {
 
     &.mobileMode {
         width: 100%;
+
+        & main#page {
+            min-height: calc(100% - var(--overlayHeaderHeight) - var(--appFooterHeight));
+        }
     }
     &.desktopMode {
         height: 100%;
