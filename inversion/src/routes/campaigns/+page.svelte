@@ -8,6 +8,7 @@
     import PasscodesSection from "./PasscodesSection.svelte";
 	import SnorerIcon from "$lib/components/icons/SnorerIcon.svelte";
 	import RevealIcon from "$lib/components/icons/RevealIcon.svelte";
+	import CampaignEditCard from "./CampaignEditCard.svelte";
 
     let { data } = $props();
     let session = $derived(data.session);
@@ -42,10 +43,8 @@
     {#if session}
         <section>
             <h2>My Campaigns</h2>
-            {#each myCampaigns as campaign}
-                <article>
-                    <h3>{campaign.campaign_title}</h3>
-                </article>
+            {#each myCampaigns as campaign, index}
+                <CampaignEditCard {campaign} {index} />
             {/each}
         </section>
         <section>

@@ -1,5 +1,6 @@
 import { error, fail } from "@sveltejs/kit";
 import { getProfileOrNull } from "$lib/utils";
+import { ADMIN_AUTH } from "$lib/constants";
 
 export const load = async ({ locals: { safeGetSession, supabase } }) => {
     const { user } = await safeGetSession();
@@ -28,6 +29,38 @@ export const actions = {
         if (error) {
             console.error({ error });
             return fail(500, { message: error.message || "Something went wrong.", src: "newPasscode" });
+        }
+        return {};
+    },
+    editCampaign: async ({ request, locals: { safeGetSession, supabase } }) => {
+        const formData = await request.formData();
+        const { user } = await safeGetSession();
+        const profile = await getProfileOrNull(supabase, user?.id);
+        if (!profile || profile.privilege < 1) {
+            throw error(403, "Forbidden");
+        }
+
+        const campaignId = parseInt(formData.get("campaign_id"));
+        if (profile.privilege < ADMIN_AUTH) {
+            const { data: campaign, error } = await supabase.from("campaigns").select("creator").eq("id", campaignId);
+            if (error) {
+                console.error({ error });
+                return fail(500, { message: error.message || "Something went wrong.", src: "editCampaign" });
+            }
+            if (campaign.creator !== user.id) {
+                throw error(403, "Forbidden");
+            }
+        }
+        
+        const { error } = await supabase.from("campaigns").update({
+            campaign_title: formData.get("campaign_title"),
+            view_passcode: formData.get("view_passcode"),
+            participate_passcode: formData.get("participate_passcode"),
+            description: JSON.parse(formData.get("description")),
+        }).eq("id", campaignId);
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong.", src: "editCampaign" });
         }
         return {};
     },

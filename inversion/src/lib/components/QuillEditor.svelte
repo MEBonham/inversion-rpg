@@ -9,7 +9,7 @@
 		["clean"]
     ];
     
-    let { editor=$bindable(), toolbarOptions=defaultOptions, readOnly=false, index="" } = $props();
+    let { editor=$bindable(), toolbarOptions=defaultOptions, readOnly=false, index="", editingPrevious=false } = $props();
     const id = index !== "" ? `editor-${index}` : "editor";
     onMount(async () => {
         const { default: Quill } = await import("quill");
@@ -24,6 +24,9 @@
         if (readOnly && editor) {
             quill.setContents(editor);
         } else {
+            if (editingPrevious) {
+                quill.setContents(editor);
+            }
             quill.on("text-change", () => editor = quill.getContents());
             return () => quill.off("text-change");
         }
