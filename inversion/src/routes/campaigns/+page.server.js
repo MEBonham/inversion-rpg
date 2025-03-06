@@ -98,7 +98,7 @@ export const actions = {
             console.error({ dupError });
             return fail(500, { message: dupError.message || "Something went wrong.", src: "editCampaign" });
         }
-        workingTitle = `${workingTitle} ${extraTitleNum}`;
+        workingTitle = `${workingTitle}${extraTitleNum > 1 ? ` ${extraTitleNum}` : ""}`;
         
         const { error } = await supabase.from("campaigns").update({
             campaign_title: workingTitle,
@@ -136,7 +136,7 @@ export const actions = {
             console.error({ dupError });
             return fail(500, { message: dupError.message || "Something went wrong.", src: "editCampaign" });
         }
-        workingTitle = `${workingTitle} ${extraTitleNum}`;
+        workingTitle = `${workingTitle}${extraTitleNum > 1 ? ` ${extraTitleNum}` : ""}`;
 
         const { error } = await supabase.from("campaigns").insert({
             campaign_title: workingTitle,
