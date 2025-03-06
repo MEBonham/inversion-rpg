@@ -79,9 +79,29 @@ export const actions = {
                 throw error(403, "Forbidden");
             }
         }
+
+        // Make sure title is unique by appending a number on the end if needed
+        let workingTitle = formData.get("campaign_title");
+        let { data: dupTitles, error: dupError } = await supabase.from("campaigns")
+            .select("id")
+            .eq("campaign_title", workingTitle)
+            .neq("id", campaignId);
+        let extraTitleNum = 1;
+        while (!dupError && dupTitles.length > 0) {
+            extraTitleNum++;
+            let { data: dupTitles, error: dupError } = await supabase.from("campaigns")
+                .select("id")
+                .eq("campaign_title", `${workingTitle} ${extraTitleNum}`)
+                .neq("id", campaignId);
+        }
+        if (dupError) {
+            console.error({ dupError });
+            return fail(500, { message: dupError.message || "Something went wrong.", src: "editCampaign" });
+        }
+        workingTitle = `${workingTitle} ${extraTitleNum}`;
         
         const { error } = await supabase.from("campaigns").update({
-            campaign_title: formData.get("campaign_title"),
+            campaign_title: workingTitle,
             view_passcode: formData.get("view_passcode"),
             participate_passcode: formData.get("participate_passcode"),
             description: JSON.parse(formData.get("description")),
@@ -100,8 +120,26 @@ export const actions = {
             throw error(403, "Forbidden");
         }
 
+        // Make sure title is unique by appending a number on the end if needed
+        let workingTitle = formData.get("campaign_title");
+        let { data: dupTitles, error: dupError } = await supabase.from("campaigns")
+            .select("id")
+            .eq("campaign_title", workingTitle);
+        let extraTitleNum = 1;
+        while (!dupError && dupTitles.length > 0) {
+            extraTitleNum++;
+            let { data: dupTitles, error: dupError } = await supabase.from("campaigns")
+                .select("id")
+                .eq("campaign_title", `${workingTitle} ${extraTitleNum}`);
+        }
+        if (dupError) {
+            console.error({ dupError });
+            return fail(500, { message: dupError.message || "Something went wrong.", src: "editCampaign" });
+        }
+        workingTitle = `${workingTitle} ${extraTitleNum}`;
+
         const { error } = await supabase.from("campaigns").insert({
-            campaign_title: formData.get("campaign_title"),
+            campaign_title: workingTitle,
             creator: user.id,
             view_passcode: formData.get("view_passcode"),
             participate_passcode: formData.get("participate_passcode"),
