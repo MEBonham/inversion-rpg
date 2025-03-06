@@ -32,7 +32,6 @@
     let loading = $state(false);
     const localHandleSubmit = () => {
         loading = true;
-        document.querySelector(`#editor-${index}`).setContent(editorContent);
         return async ({ update }) => {
             await update();
             await sleep(0.1);
