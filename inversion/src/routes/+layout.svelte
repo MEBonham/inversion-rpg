@@ -37,9 +37,7 @@
 
     $effect(() => {
         if (window.localStorage.getItem("inversion-dark-mode") === null) {
-            window.localStorage.setItem("inversion-dark-mode",
-                window.matchMedia("(prefers-color-scheme: dark)").matches ? "true" : "false"
-            );
+            window.localStorage.setItem("inversion-dark-mode", "false");
         }
         if (window.localStorage.getItem("inversion-dark-mode") === "true") {
             document.querySelector(':root').classList.add("darkMode");
