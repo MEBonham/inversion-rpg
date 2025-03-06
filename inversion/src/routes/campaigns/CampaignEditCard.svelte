@@ -25,6 +25,7 @@
         initialParticipatePasscode = campaign.participate_passcode;
         editorContent = campaign.description;
     });
+    $inspect(editorContent);
 
     let descriptionOpen = $state(false);
     let dialogOpen = $state(false);
