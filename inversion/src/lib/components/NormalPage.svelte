@@ -64,12 +64,14 @@
         top: 5.0rem;
         left: 0.6rem;
         height: calc(100% - 4.2rem);
+        max-width: 3.4rem;
     }
     img.right {
         position: absolute;
         top: 5.0rem;
         right: 0.6rem;
         height: calc(100% - 4.2rem);
+        max-width: 3.4rem;
     }
     img.cornerLeft {
         position: absolute;

@@ -21,7 +21,7 @@ export const actions = {
         }
 
         const { error } = await supabase.auth.signInWithOtp({ email, options: {
-            emailRedirectTo: `${PUBLIC_ENV_URL}/`
+            emailRedirectTo: `${PUBLIC_ENV_URL}/settings`
         } });
         if (error) {
             console.error({ error });
