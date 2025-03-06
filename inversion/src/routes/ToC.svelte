@@ -71,12 +71,12 @@
         width: 100%;
         flex-grow: 1;
         padding: 1.4rem 3.4rem;
-        background-color: var(--invertParchment);
+        background-color: var(--consistentDark);
         background-image: url("/bgs/transParchment.png");
         background-position: center;
         display: flex;
         justify-content: center;
-        color: var(--parchment);
+        color: var(--consistentLight);
         font-size: 2.0rem;
 
         &.open {
@@ -99,10 +99,10 @@
         width: 100%;
         height: 100%;
         border-radius: 1.8rem 0 0 1.8rem;
-        background-color: var(--invertParchment);
+        background-color: var(--consistentDark);
         background-image: url("/bgs/transParchment.png");
         background-position: center;
-        box-shadow: 0 0 1.0rem var(--parchment) inset;
+        box-shadow: 0 0 1.0rem var(--consistentLight) inset;
         padding: 1.4rem 2.6rem 0.4rem;
         display: flex;
         flex-direction: column;
