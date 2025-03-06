@@ -41,6 +41,7 @@
 <style>
     div.editor-wrapper.editable {
         background-color: ivory;
+        color: var(--consistentDark);
 
         & :global(div.ql-container) {
             min-height: 12rem;

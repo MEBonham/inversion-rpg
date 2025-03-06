@@ -1,0 +1,77 @@
+import { error, fail } from "@sveltejs/kit";
+import { getProfileOrNull } from "$lib/utils";
+
+export const load = async ({ locals: { safeGetSession, supabase } }) => {
+    const { user } = await safeGetSession();
+    const profile = await getProfileOrNull(supabase, user?.id);
+    const { data: allCampaigns, error } = await supabase.from("campaigns").select("*");
+    if (error) {
+        console.error({ error });
+        return fail(500, { message: error.message || "Something went wrong." });
+    }
+    return { allCampaigns };
+}
+
+export const actions = {
+    deletePasscode: async ({ request, locals: { safeGetSession, supabase } }) => {
+        const formData = await request.formData();
+        const { user } = await safeGetSession();
+        const profile = await getProfileOrNull(supabase, user?.id);
+        const passcodeToDelete = formData.get("passcodeToDelete");
+        if (!profile || !passcodeToDelete) {
+            throw error(400, "Bad Request");
+        }
+
+        const { error } = await supabase.from("profiles").update({
+            passcodes: profile.passcodes.filter(passcode => passcode !== passcodeToDelete)
+        }).eq("id", user.id);
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong.", src: "newPasscode" });
+        }
+        return {};
+    },
+    newCampaign: async ({ request, locals: { safeGetSession, supabase } }) => {
+        const formData = await request.formData();
+        const { user } = await safeGetSession();
+        const profile = await getProfileOrNull(supabase, user?.id);
+        if (!profile || profile.privilege < 1) {
+            throw error(403, "Forbidden");
+        }
+
+        const { error } = await supabase.from("campaigns").insert({
+            campaign_title: formData.get("campaign_title"),
+            creator: user.id,
+            view_passcode: formData.get("view_passcode"),
+            participate_passcode: formData.get("participate_passcode"),
+            description: JSON.parse(formData.get("description")),
+        });
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong.", src: "newCampaign" });
+        }
+        return {};
+    },
+    newPasscode: async ({ request, locals: { safeGetSession, supabase } }) => {
+        const formData = await request.formData();
+        const { user } = await safeGetSession();
+        const profile = await getProfileOrNull(supabase, user?.id);
+        const newPasscode = formData.get("newPasscode");
+        if (!profile || !newPasscode) {
+            throw error(400, "Bad Request");
+        }
+
+        if (profile.passcodes.includes(newPasscode)) {
+            return {};
+        }
+
+        const { error } = await supabase.from("profiles").update({
+            passcodes: [...profile.passcodes, newPasscode]
+        }).eq("id", user.id);
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong.", src: "newPasscode" });
+        }
+        return {};
+    }
+}

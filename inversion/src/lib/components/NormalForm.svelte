@@ -17,6 +17,13 @@
         flex-direction: column;
         gap: 0.8rem;
 
+        & :global(input) {
+            padding: 0.4rem;
+            border-radius: 0.6rem;
+            border: 1px solid hsl(0, 0%, 50%);
+            background-color: ivory;
+            color: var(--consistentDark);
+        }
         & :global(label) {
             margin: 0.6rem 0;
             width: 100%;
@@ -30,10 +37,6 @@
             & :global(input) {
                 flex-grow: 1;
                 flex-shrink: 1;
-                padding: 0.4rem;
-                border-radius: 0.6rem;
-                border: 1px solid hsl(0, 0%, 50%);
-                background-color: ivory;
             }
         }
         & :global(label.radio) {
@@ -67,6 +70,7 @@
             width: 100%;
             display: flex;
             justify-content: flex-end;
+            gap: 0.8rem;
         }
     }
 </style>
