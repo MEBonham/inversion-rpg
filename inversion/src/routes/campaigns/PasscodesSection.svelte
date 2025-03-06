@@ -34,6 +34,10 @@
         const array = JSON.parse(copyOfLocalStoragePasscodes);
         copyOfLocalStoragePasscodes = JSON.stringify(array.filter(p => p !== passcode));
     };
+    const remoteDeleteFormSubmit = (passcode) => {
+        const form = document.getElementById(`deleteForm^${passcode}`);
+        form.requestSubmit();
+    };
 
     let loading = $state(false);
 </script>
@@ -60,20 +64,26 @@
                         <span {...props} class="clickable">{passcode}</span>                        
                     {/snippet}
                 </ContextMenu.Trigger>
-                <ContextMenu.Portal to="#liftPageContent">
-                    <ContextMenu.Content>
-                        <ContextMenu.Item>
-                            {#if profile}
-                                <form method="post" action="?/deletePasscode" fct={() => handleSubmit(loading)}>
-                                    <input type="hidden" name="passcodeToDelete" value={passcode} />
-                                    <Button type="submit" disabled={loading}>Delete {passcode}</Button>
-                                </form>
-                            {:else}
+                {#if profile}
+                    <form id={`deleteForm^${passcode}`} method="post" action="?/deletePasscode" fct={() => handleSubmit(loading)} class="hideMe">
+                        <input type="hidden" name="passcodeToDelete" value={passcode} />
+                    </form>
+                    <ContextMenu.Portal to="#liftPageContent">
+                        <ContextMenu.Content>
+                            <ContextMenu.Item>
+                                <Button onclick={() => remoteDeleteFormSubmit(passcode)}>Delete {passcode}</Button>
+                            </ContextMenu.Item>
+                        </ContextMenu.Content>
+                    </ContextMenu.Portal>
+                {:else}
+                    <ContextMenu.Portal to="#liftPageContent">
+                        <ContextMenu.Content>
+                            <ContextMenu.Item>
                                 <Button onclick={() => deleteGuestPasscode(passcode)}>Delete {passcode}</Button>
-                            {/if}
-                        </ContextMenu.Item>
-                    </ContextMenu.Content>
-                </ContextMenu.Portal>
+                            </ContextMenu.Item>
+                        </ContextMenu.Content>
+                    </ContextMenu.Portal>
+                {/if}
             </ContextMenu.Root>
             <BufferDot />
         {/each}
@@ -88,14 +98,17 @@
             copyOfLocalStoragePasscodes = JSON.stringify([...passcodes, newPasscode]);
             ev.target.newPasscode.value = "";
             ev.target.focus();
-        }}>
+        }} class="showMe">
             {@render passcodeForm()}
         </form>
     {/if}
 </section>
 
 <style>
-    form {
+    form.hideMe {
+        display: inline;
+    }
+    form.showMe {
         max-width: 100%;
         padding: 0.6rem 1.2rem;
         display: flex;

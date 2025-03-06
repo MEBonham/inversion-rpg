@@ -73,5 +73,47 @@ export const actions = {
             return fail(500, { message: error.message || "Something went wrong.", src: "newPasscode" });
         }
         return {};
+    },
+    suppressCampaign: async ({ request, locals: { safeGetSession, supabase } }) => {
+        const formData = await request.formData();
+        const { user } = await safeGetSession();
+        const profile = await getProfileOrNull(supabase, user?.id);
+        const campaignId = parseInt(formData.get("campaignId"));
+        if (!profile || !campaignId) {
+            throw error(400, "Bad Request");
+        }
+        if (profile.suppressed_campaigns.includes(campaignId)) {
+            return {};
+        }
+
+        const { error } = await supabase.from("profiles").update({
+            suppressed_campaigns: [...profile.suppressed_campaigns, campaignId]
+        }).eq("id", user.id);
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong.", src: "suppressCampaign" });
+        }
+        return {};
+    },
+    unsuppressCampaign: async ({ request, locals: { safeGetSession, supabase } }) => {
+        const formData = await request.formData();
+        const { user } = await safeGetSession();
+        const profile = await getProfileOrNull(supabase, user?.id);
+        const campaignId = parseInt(formData.get("campaignId"));
+        if (!profile || !campaignId) {
+            throw error(400, "Bad Request");
+        }
+        if (!profile.suppressed_campaigns.includes(campaignId)) {
+            return {};
+        }
+
+        const { error } = await supabase.from("profiles").update({
+            suppressed_campaigns: profile.suppressed_campaigns.filter(campaign => campaign !== campaignId)
+        }).eq("id", user.id);
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong.", src: "unsuppressCampaign" });
+        }
+        return {};
     }
 }

@@ -45,6 +45,7 @@
             display: flex;
             flex-direction: column;
             gap: 2.0rem;
+            margin-bottom: 2.6rem;
         }
         & :global(h2) {
             font-size: 2.8rem;
