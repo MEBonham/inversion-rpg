@@ -15,6 +15,7 @@
         readOnly=false,
         index="",
         editingPrevious=false,
+        bindToQuill=null,
     } = $props();
 
     const id = index !== "" ? `editor-${index}` : "editor";
@@ -27,6 +28,7 @@
             },
             theme: "snow",
         });
+        if (bindToQuill) bindToQuill(quill);
         
         if (readOnly && editor) {
             quill.setContents(editor);
