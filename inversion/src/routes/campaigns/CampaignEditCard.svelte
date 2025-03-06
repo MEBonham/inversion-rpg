@@ -1,7 +1,10 @@
 <script>
     import { page } from "$app/stores";
-    import { Collapsible, Dialog } from "bits-ui";
-    import { sleep } from "$lib/utils.js";
+	import { invalidate } from "$app/navigation"
+    ;
+    import { Collapsible, ContextMenu, Dialog } from "bits-ui";
+    
+    import { handleSubmit, sleep } from "$lib/utils.js";
     import QuillEditor from "$lib/components/QuillEditor.svelte";
     import PencilEditIcon from "$lib/components/icons/PencilEditIcon.svelte";
     import TriangleOpenerIcon from "$lib/components/icons/TriangleOpenerIcon.svelte";
@@ -10,32 +13,46 @@
     import Button from "$lib/components/Button.svelte";
 
     let { campaign, index } = $props();
-    let initialTitle = $state(campaign.campaign_title);
-    let initialViewPasscode = $state(campaign.view_passcode);
-    let initialParticipatePasscode = $state(campaign.participate_passcode);
-    let editorContent = $state(campaign.description);
-    let dbFriendly = $derived(JSON.stringify(editorContent));
 
+    let initialTitle = $state();
+    let initialViewPasscode = $state();
+    let initialParticipatePasscode = $state();
+    let editorContent = $state();
+    let dbFriendly = $derived(JSON.stringify(editorContent || { ops: []}));
+    $effect(() => {
+        initialTitle = campaign.campaign_title;
+        initialViewPasscode = campaign.view_passcode;
+        initialParticipatePasscode = campaign.participate_passcode;
+        editorContent = campaign.description;
+    });
+
+    let descriptionOpen = $state(false);
     let dialogOpen = $state(false);
 
     let loading = $state(false);
-    const handleSubmit = () => {
+    const localHandleSubmit = () => {
         loading = true;
+        document.querySelector(`#editor-${index}`).setContent(editorContent);
         return async ({ update }) => {
             await update();
             await sleep(0.1);
             loading = false;
+            invalidate("/campaigns");
             dialogOpen = false;
         };
     }
+    const remoteDeleteFormSubmit = () => {
+        const form = document.querySelector("#dialogDeleteUtility form");
+        form.requestSubmit();
+    };
 </script>
 
 <article>
-    <Collapsible.Root>
+    <Collapsible.Root bind:open={descriptionOpen}>
         <h3>
             <Collapsible.Trigger>
                 {#snippet child({ props })}
-                    <span {...props}>
+                    <span {...props} class={descriptionOpen ? "open" : ""}>
                         <TriangleOpenerIcon />
                         {campaign.campaign_title}
                     </span>
@@ -50,7 +67,28 @@
                     {/snippet}
                 </Dialog.Trigger>
                 <NormalDialog title="Edit Campaign">
-                    <NormalForm method="post" action="?/editCampaign" fct={handleSubmit}>
+                    <header id="dialogDeleteUtility">
+                        <form method="post" action="?/deleteCampaign" fct={() => handleSubmit(loading)}>
+                            <input type="hidden" name="campaign_id" id="campaign_id" value={campaign.id} />
+                        </form>
+                        <ContextMenu.Root>
+                            <ContextMenu.Trigger>
+                                {#snippet child({ props })}
+                                    <Button {...props}>
+                                        Right-click to delete campaign
+                                    </Button>
+                                {/snippet}
+                            </ContextMenu.Trigger>
+                            <ContextMenu.Portal to="#dialogDeleteUtility">
+                                <ContextMenu.Content>
+                                    <ContextMenu.Item>
+                                        <Button onclick={() => remoteDeleteFormSubmit()}>Delete</Button>
+                                    </ContextMenu.Item>
+                                </ContextMenu.Content>
+                            </ContextMenu.Portal>
+                        </ContextMenu.Root>
+                    </header>
+                    <NormalForm method="post" action="?/editCampaign" fct={localHandleSubmit}>
                         <input type="hidden" name="campaign_id" id="campaign_id" value={campaign.id} />
                         <label for="campaign_title">
                             <span>Campaign Title:</span>
@@ -78,7 +116,12 @@
             </Dialog.Root>
         </h3>
         <Collapsible.Content>
-            <QuillEditor editor={editorContent} readOnly toolbarOptions={null} {index} />
+            <QuillEditor
+                bind:editor={editorContent}
+                readOnly
+                toolbarOptions={null}
+                {index}
+            />
         </Collapsible.Content>
     </Collapsible.Root>
 </article>
@@ -94,6 +137,35 @@
             top: -0.3rem;
             width: 2.0rem;
             height: 2.0rem;
+        }
+
+        & span {
+            cursor: pointer;
+        
+            :global(svg) {
+                position: relative;
+                top: -0.3rem;
+                transition: transform 0.2s linear;
+                margin-right: 0.4rem;
+            }
+        }
+        & span.open :global(svg) {
+            transform: rotate(90deg);
+        }
+    }
+
+    header {
+        margin: 1.6rem 1.2rem 0.8rem;
+        display: flex;
+        justify-content: space-between;
+
+        & :global(button) {
+            background-color: var(--warningColor);
+            color: var(--parchment);
+
+            &:hover {
+                background-color: var(--warningHover);
+            }
         }
     }
 </style>

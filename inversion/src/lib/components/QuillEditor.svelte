@@ -9,7 +9,14 @@
 		["clean"]
     ];
     
-    let { editor=$bindable(), toolbarOptions=defaultOptions, readOnly=false, index="", editingPrevious=false } = $props();
+    let {
+        editor=$bindable(),
+        toolbarOptions=defaultOptions,
+        readOnly=false,
+        index="",
+        editingPrevious=false,
+    } = $props();
+
     const id = index !== "" ? `editor-${index}` : "editor";
     onMount(async () => {
         const { default: Quill } = await import("quill");
@@ -23,6 +30,7 @@
         
         if (readOnly && editor) {
             quill.setContents(editor);
+            document.querySelector(`#${id} .ql-editor`).style.setProperty("padding-top", "0.2rem");
         } else {
             if (editingPrevious) {
                 quill.setContents(editor);

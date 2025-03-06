@@ -33,7 +33,7 @@ div[data-dialog-content] {
     width: max-content;
     max-width: 70%;
     height: min-content;
-    max-height: 88%;
+    max-height: 84%;
     margin: 0 auto;
     padding: 1.6rem 2.4rem;
     background-color: var(--parchment);

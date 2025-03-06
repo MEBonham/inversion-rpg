@@ -14,6 +14,34 @@ export const load = async ({ locals: { safeGetSession, supabase } }) => {
 }
 
 export const actions = {
+    deleteCampaign: async ({ request, locals: { safeGetSession, supabase } }) => {
+        const formData = await request.formData();
+        const { user } = await safeGetSession();
+        const profile = await getProfileOrNull(supabase, user?.id);
+        const campaignId = parseInt(formData.get("campaign_id"));
+        if (!profile || !campaignId) {
+            throw error(400, "Bad Request");
+        }
+
+        if (profile.privilege < ADMIN_AUTH) {
+            const { data: campaign, error } = await supabase.from("campaigns").select("creator").eq("id", campaignId);
+            if (error) {
+                console.error({ error });
+                return fail(500, { message: error.message || "Something went wrong.", src: "editCampaign" });
+            }
+            if (campaign.creator !== user.id) {
+                throw error(403, "Forbidden");
+            }
+        }
+        
+        const { error } = await supabase.from("campaigns").delete()
+            .eq("id", campaignId);
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong.", src: "editCampaign" });
+        }
+        return {};
+    },
     deletePasscode: async ({ request, locals: { safeGetSession, supabase } }) => {
         const formData = await request.formData();
         const { user } = await safeGetSession();

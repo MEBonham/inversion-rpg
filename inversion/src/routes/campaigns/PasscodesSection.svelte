@@ -52,7 +52,7 @@
 {/snippet}
 
 <section>
-    <h2>Passcodes</h2>
+    <h2>Passcodes (right-click to delete)</h2>
     <p>
         {#if passcodes.length > 0}
             <BufferDot />
