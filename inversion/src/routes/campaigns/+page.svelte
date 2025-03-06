@@ -21,7 +21,7 @@
             return profile.passcodes;
         }
         if (typeof document !== "undefined") {
-            return JSON.parse(copyOfLocalStoragePasscodes || "[]");
+            return JSON.parse(window.localStorage.getItem("inversion-guest-passcodes") || "[]");
         }
         return [];
     });
