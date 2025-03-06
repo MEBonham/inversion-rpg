@@ -25,7 +25,11 @@
         initialParticipatePasscode = campaign.participate_passcode;
         editorContent = campaign.description;
     });
-    $inspect(editorContent);
+
+    let quillRef = $state();
+    const bindToQuill = (quillInstance) => {
+        quillRef = quillInstance;
+    }
 
     let descriptionOpen = $state(false);
     let dialogOpen = $state(false);
@@ -38,6 +42,7 @@
             await sleep(0.1);
             loading = false;
             invalidate("/campaigns");
+            quillRef.setContents(campaign.description);
             dialogOpen = false;
         };
     }
@@ -121,6 +126,7 @@
                 readOnly
                 toolbarOptions={null}
                 {index}
+                {bindToQuill}
             />
         </Collapsible.Content>
     </Collapsible.Root>
