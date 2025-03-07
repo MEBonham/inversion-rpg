@@ -35,16 +35,11 @@
     let dialogOpen = $state(false);
 
     let loading = $state(false);
-    const localHandleSubmit = () => {
-        loading = true;
-        return async ({ update }) => {
-            await update();
-            await sleep(0.1);
-            loading = false;
-            invalidate("/campaigns");
-            quillRef.setContents(campaign.description);
-            dialogOpen = false;
-        };
+    const cleanupSubmit = async () => {
+        await sleep(0.1);
+        invalidate("/campaigns");
+        quillRef.setContents(campaign.description);
+        dialogOpen = false;
     }
     const remoteDeleteFormSubmit = () => {
         const form = document.querySelector("#dialogDeleteUtility form");
@@ -93,7 +88,7 @@
                             </ContextMenu.Portal>
                         </ContextMenu.Root>
                     </header>
-                    <NormalForm method="post" action="?/editCampaign" fct={localHandleSubmit}>
+                    <NormalForm method="post" action="?/editCampaign" fct={() => handleSubmit(loading, cleanupSubmit)}>
                         <input type="hidden" name="campaign_id" id="campaign_id" value={campaign.id} />
                         <label for="campaign_title">
                             <span>Campaign Title:</span>

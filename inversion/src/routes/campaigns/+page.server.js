@@ -89,10 +89,12 @@ export const actions = {
         let extraTitleNum = 1;
         while (!dupError && dupTitles.length > 0) {
             extraTitleNum++;
-            let { data: dupTitles, error: dupError } = await supabase.from("campaigns")
+            let { data: dbDupTitles, error: dbDupError } = await supabase.from("campaigns")
                 .select("id")
                 .eq("campaign_title", `${workingTitle} ${extraTitleNum}`)
                 .neq("id", campaignId);
+            dupTitles = dbDupTitles;
+            dupError = dbDupError;
         }
         if (dupError) {
             console.error({ dupError });
@@ -129,9 +131,11 @@ export const actions = {
         let extraTitleNum = 1;
         while (!dupError && dupTitles.length > 0) {
             extraTitleNum++;
-            let { data: dupTitles, error: dupError } = await supabase.from("campaigns")
+            let { data: dbDupTitles, error: dbDupError } = await supabase.from("campaigns")
                 .select("id")
                 .eq("campaign_title", `${workingTitle} ${extraTitleNum}`);
+            dupTitles = dbDupTitles;
+            dupError = dbDupError;
         }
         if (dupError) {
             console.error({ dupError });
