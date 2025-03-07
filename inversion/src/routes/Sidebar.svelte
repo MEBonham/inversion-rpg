@@ -11,7 +11,7 @@
 <style>
     aside {
         position: relative;
-        min-width: 30%;
+        min-width: 23%;
         height: 100%;
         z-index: 10;
         box-shadow: 0 0 0.5rem var(--invertParchment);

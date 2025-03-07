@@ -5,6 +5,10 @@ export const blobToBase64 = async (blob, options = {}) => {
     return `data:${options.mimeType || blob.type};base64,` + buffer.toString("base64");
 }
 
+export const clamp = (value, min, max) => {
+    return Math.min(Math.max(value, min), max);
+}
+
 export const getProfileOrNull = async (clientInstance, userId) => {
     if (!userId) return null;
     const { data, error } = await clientInstance.from("profiles")
@@ -18,10 +22,13 @@ export const getProfileOrNull = async (clientInstance, userId) => {
     return data;
 }
 
-export const handleSubmit = (loadingRef) => {
+export const handleSubmit = (loadingRef, cleanupFct=null) => {
     loadingRef = true;
     return async ({ update }) => {
         await update();
+        if (cleanupFct) {
+            cleanupFct();
+        }
         loadingRef = false;
     };
 }

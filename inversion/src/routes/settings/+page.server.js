@@ -18,7 +18,7 @@ export const actions = {
         const { session } = await safeGetSession();
         if (session) {
             await supabase.auth.signOut();
-            throw redirect(303, "/");
+            throw redirect(303, "/login");
         }
     },
 }

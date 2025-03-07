@@ -37,6 +37,8 @@
 
     $effect(() => {
         if (window.localStorage.getItem("inversion-dark-mode") === null) {
+            // Used to default to browser preference setting, but Noon wants light to be the default
+            // window.localStorage.setItem("inversion-dark-mode", window.matchMedia("(prefers-color-scheme: dark)").matches ? "true" : "false");
             window.localStorage.setItem("inversion-dark-mode", "false");
         }
         if (window.localStorage.getItem("inversion-dark-mode") === "true") {

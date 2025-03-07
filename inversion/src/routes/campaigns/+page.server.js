@@ -89,10 +89,12 @@ export const actions = {
         let extraTitleNum = 1;
         while (!dupError && dupTitles.length > 0) {
             extraTitleNum++;
-            let { data: dupTitles, error: dupError } = await supabase.from("campaigns")
+            let { data: dbDupTitles, error: dbDupError } = await supabase.from("campaigns")
                 .select("id")
                 .eq("campaign_title", `${workingTitle} ${extraTitleNum}`)
                 .neq("id", campaignId);
+            dupTitles = dbDupTitles;
+            dupError = dbDupError;
         }
         if (dupError) {
             console.error({ dupError });
@@ -105,6 +107,7 @@ export const actions = {
             view_passcode: formData.get("view_passcode"),
             participate_passcode: formData.get("participate_passcode"),
             description: JSON.parse(formData.get("description")),
+            updated_at: new Date(),
         }).eq("id", campaignId);
         if (error) {
             console.error({ error });
@@ -128,9 +131,11 @@ export const actions = {
         let extraTitleNum = 1;
         while (!dupError && dupTitles.length > 0) {
             extraTitleNum++;
-            let { data: dupTitles, error: dupError } = await supabase.from("campaigns")
+            let { data: dbDupTitles, error: dbDupError } = await supabase.from("campaigns")
                 .select("id")
                 .eq("campaign_title", `${workingTitle} ${extraTitleNum}`);
+            dupTitles = dbDupTitles;
+            dupError = dbDupError;
         }
         if (dupError) {
             console.error({ dupError });
