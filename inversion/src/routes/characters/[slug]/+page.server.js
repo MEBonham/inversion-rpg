@@ -8,5 +8,14 @@ export const load = async ({ locals: { supabase }, params }) => {
         console.error({ characterError });
         return fail(500, { message: characterError.message || "Something went wrong." });
     }
-    return { character };
+
+    const { data: originCampaign, error: originError } = await supabase.from("campaigns")
+        .select("creator")
+        .eq("id", character.campaign)
+        .single();
+    if (originError) {
+        console.error({ originError });
+        return fail(500, { message: originError.message || "Something went wrong." });
+    }
+    return { character, originCampaign };
 }

@@ -19,7 +19,10 @@ export const load = async ({ locals: { safeGetSession, supabase } }) => {
         return fail(500, { message: charactersError.message || "Something went wrong." });
     }
 
-    return { allCampaigns, allCharacters };
+    return {
+        allCampaigns: allCampaigns.sort((a, b) => a.campaign_title.toUpperCase().localeCompare(b.campaign_title.toUpperCase())),
+        allCharacters
+    };
 }
 
 export const actions = {
