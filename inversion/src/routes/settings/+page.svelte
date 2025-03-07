@@ -20,7 +20,6 @@
 <NormalPage title={`Welcome, ${profile?.username || session?.user?.email || "guest"}!`}>
     {#if session}
         <section>
-            <h2>Logout</h2>
             <form method="post" action="?/logout">
                 <Button type="submit" disabled={loading}>
                     {loading ? "Loading ..." : "Logout"}

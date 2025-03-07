@@ -105,6 +105,7 @@ export const actions = {
             view_passcode: formData.get("view_passcode"),
             participate_passcode: formData.get("participate_passcode"),
             description: JSON.parse(formData.get("description")),
+            updated_at: new Date(),
         }).eq("id", campaignId);
         if (error) {
             console.error({ error });

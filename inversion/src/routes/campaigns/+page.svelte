@@ -28,8 +28,7 @@
     let campaignsDisplayed = data.allCampaigns.filter((campaign) => {
         if (campaign.creator === profile?.id) return true;
         if (passcodes.includes(campaign.view_passcode)) return true;
-        if (passcodes.includes(campaign.participate_passcode)) return true;
-        return false;
+        return (passcodes.includes(campaign.participate_passcode));
     });
 
     let description = $state();
