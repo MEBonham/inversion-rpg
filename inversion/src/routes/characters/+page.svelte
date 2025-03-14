@@ -27,7 +27,7 @@
     );
     let displayedCampaigns = $derived(
         viewableCampaigns.filter((campaign) => {
-            if (profile.suppressed_campaigns.includes(campaign.id)) return false;
+            if (profile?.suppressed_campaigns.includes(campaign.id)) return false;
             return true;
         })
     );

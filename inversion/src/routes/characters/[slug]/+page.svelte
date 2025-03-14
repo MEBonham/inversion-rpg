@@ -1,4 +1,5 @@
 <script>
+    import { goto } from "$app/navigation";
     import NormalPage from "$lib/components/NormalPage.svelte";
 
     let { data } = $props();
@@ -18,20 +19,23 @@
     let hasViewPermission = $state(false);
     let hasEditPermission = $state(false);
     $effect(() => {
-        if (cur.owner === profile.id) {
+        console.log(cur.secret, passcodes, data.originCampaign.view_passcode);
+        if (cur.owner === profile?.id) {
             hasViewPermission = true;
             hasEditPermission = true;
-        } else if (data.originCampaign.creator === profile.id) {
+        } else if (data.originCampaign.creator === profile?.id) {
             hasViewPermission = true;
             hasEditPermission = true;
+        } else if (!cur.secret && passcodes.includes(data.originCampaign.view_passcode)) {
+            hasViewPermission = true;
         } else if (!cur.secret && passcodes.includes(data.originCampaign.participate_passcode)) {
             hasViewPermission = true;
         }
         if (!hasViewPermission) {
             if (!profile) {
-                throw redirect(303, "/login");
+                goto("/login");
             } else {
-                throw redirect(303, "/characters");
+                goto("/characters");
             }
         }
         initialLoad = false;
