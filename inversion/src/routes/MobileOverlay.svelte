@@ -1,5 +1,5 @@
 <script>
-    import { slide } from "svelte/transition";
+    import { fade, slide } from "svelte/transition";
     import { Collapsible } from "bits-ui";
     import { modes } from "$lib/store.svelte.js";
     import HamburgerIcon from "$lib/components/icons/HamburgerIcon.svelte";
@@ -33,12 +33,12 @@
                 </Collapsible.Trigger>
                 <LogoHomeLink />
             </header>
-            <div id="overlayPanelVisual"></div>
+            <div id="overlayPanelVisual" out:fade={{ duration: 300}}></div>
             <Collapsible.Content forceMount>
                 {#snippet child({ props, open })}
                     {#if open}
                         <nav {...props} in:slide={{ delay: 100, duration: 300 }}>
-                            <ToC />
+                            <ToC {closeFct} />
                         </nav>
                     {/if}
                 {/snippet}

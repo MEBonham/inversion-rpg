@@ -1,4 +1,5 @@
 <script>
+    import { invalidate } from "$app/navigation";
     import { fade } from "svelte/transition";
 
     import { ScrollArea } from "bits-ui";
@@ -14,7 +15,17 @@
     import MobileOverlay from "./MobileOverlay.svelte";
     import AppFooter from "./AppFooter.svelte";
 
-    let { children } = $props();
+    let { children, data } = $props();
+
+    let { supabase, session } = $state(data);
+    $effect(() => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, _session) => {
+            if (_session?.expires_at !== session?.expires_at) {
+                invalidate("supabase:auth");
+            }
+        })
+        return () => subscription.unsubscribe();
+    });
 
     // Keep track in global state whether the app is on mobile
     let screenWidth = $state();

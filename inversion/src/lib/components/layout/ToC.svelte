@@ -4,15 +4,23 @@
     let { closeFct = () => {} } = $props();
 </script>
 
-<nav>
-    <a href="/campaigns" onclick={closeFct}>Campaigns</a>
-    <a href="/characters" onclick={closeFct}>Characters</a>
-    <a href="/settings" onclick={closeFct}>Account & Settings</a>
-    <a href="/login" onclick={closeFct}>Login/Register</a>
-</nav>
+<ul>
+    <li>
+        <a href="/campaigns" onclick={closeFct}>Campaigns</a>
+    </li>
+    <li>
+        <a href="/characters" onclick={closeFct}>Characters</a>
+    </li>
+    <li>
+        <a href="/settings" onclick={closeFct}>Account & Settings</a>
+    </li>
+    <li>
+        <a href="/login" onclick={closeFct}>Login/Register</a>
+    </li>
+</ul>
 
 <style>
-    nav {
+    ul {
         height: 100%;
         padding: 1.4rem 3.4rem;
         display: flex;
