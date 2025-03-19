@@ -1,4 +1,6 @@
 <script>
+    import { fade } from "svelte/transition";
+
     import { ScrollArea } from "bits-ui";
 
     import "$lib/styles/reset.css";
@@ -22,10 +24,9 @@
     });
 
     // Hide the Loading overlay once the refresh "flash" is done
+    let showLoadingOverlay = $state(true);
     $effect(() => {
-        sleep(0.3).then(() => {
-            document.querySelector("#loadingScreen").remove();
-        });
+        showLoadingOverlay = false;
     });
 
     // Sync Dark Mode status with localStorage
@@ -48,7 +49,9 @@
 <svelte:window bind:innerWidth={screenWidth} />
 
 <div id="envelope" class:mobileMode={mobileVersion}>
-    <div id="loadingScreen"></div>
+    {#if showLoadingOverlay}
+        <div id="loadingScreen" out:fade={{ delay: 200, duration: 500 }}></div>
+    {/if}
     {#if mobileVersion}
         <MobileOverlay />
     {:else}
