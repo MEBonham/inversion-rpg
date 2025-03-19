@@ -1,15 +1,9 @@
 <script>
-    import BufferDot from "$lib/components/BufferDot.svelte";
+	import BufferDot from "$lib/components/BufferDot.svelte";
     import DiscordIcon from "$lib/components/icons/DiscordIcon.svelte";
-    import { modes } from "$lib/store.svelte.js";
-    
-    let appFooterHeight = $state();
-    $effect(() => {
-        document.querySelector(':root').style.setProperty("--appFooterHeight", `${appFooterHeight}px`);
-    });
 </script>
 
-<footer bind:clientHeight={appFooterHeight}>
+<footer>
     <a class="icon" href="https://discord.gg/GGruKDNBun" target="_blank" rel="noopener noreferrer">
         <DiscordIcon size="2.0rem" />
     </a>

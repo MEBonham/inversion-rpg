@@ -1,10 +1,4 @@
-
-export const load = async ({ locals: { safeGetSession, supabase }, cookies }) => {
-    const { session, user } = await safeGetSession();
-
-    return {
-        session,
-        profile: user,
-        cookies: cookies.getAll(),
-    };
+export const load = async ({ locals: { getSession }, cookies }) => {
+    const session = await getSession()
+    return { session, cookies: cookies.getAll() }
 }
