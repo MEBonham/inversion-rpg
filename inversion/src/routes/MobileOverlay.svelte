@@ -1,4 +1,5 @@
 <script>
+    import { slide } from "svelte/transition";
     import { Collapsible } from "bits-ui";
     import { modes } from "$lib/store.svelte.js";
     import HamburgerIcon from "$lib/components/icons/HamburgerIcon.svelte";
@@ -32,11 +33,14 @@
                 </Collapsible.Trigger>
                 <LogoHomeLink />
             </header>
-            <Collapsible.Content>
-                {#snippet child({ props })}
-                    <div {...props}>
-                        <ToC />
-                    </div>
+            <div id="overlayPanelVisual"></div>
+            <Collapsible.Content forceMount>
+                {#snippet child({ props, open })}
+                    {#if open}
+                        <nav {...props} in:slide={{ delay: 100, duration: 300 }}>
+                            <ToC />
+                        </nav>
+                    {/if}
                 {/snippet}
             </Collapsible.Content>
         </article>        
@@ -49,17 +53,16 @@
         top: 0;
         z-index: 100;
         width: 100%;
-        background-color: var(--consistentDark);
-        background-image: url("/bgs/transParchment.png");
-        background-position: center;
-        background-size: cover;
         display: flex;
         flex-direction: column;
 
         &.open {
             height: 100%;
             
-            & > div {
+            & div#overlayPanelVisual {
+                height: calc(100% - var(--overlayHeaderHeight));
+            }
+            & > nav {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -77,6 +80,20 @@
                 width: 3rem;
                 height: 3rem;
             }
+        }
+        & div#overlayPanelVisual {
+            position: absolute;
+            top: var(--overlayHeaderHeight);
+            width: 100%;
+            height: 0;
+            background-color: var(--consistentDark);
+            background-image: url("/bgs/transParchment.png");
+            background-position: center;
+            background-size: cover;
+            transition: height 0.3s linear;
+        }
+        & nav {
+            z-index: 1;
         }
     }
 </style>
