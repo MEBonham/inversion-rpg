@@ -1,0 +1,17 @@
+
+/* SCROLLAREA */
+div[data-scroll-area-root] {
+    max-width: 100%;
+    overflow-y: hidden;
+}
+div[data-scroll-area-viewport] {
+    height: 100%;
+
+    & div[data-scroll-area-content] {
+        height: 100%;
+    }
+}
+div[data-scroll-area-viewport].pageViewport > div[data-scroll-area-content] {
+    display: flex;
+    flex-direction: column;
+}
