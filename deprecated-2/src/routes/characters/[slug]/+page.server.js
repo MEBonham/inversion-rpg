@@ -11,7 +11,7 @@ export const load = async ({ locals: { supabase }, params }) => {
 
     const { data: originCampaign, error: originError } = await supabase.from("campaigns")
         .select("creator, view_passcode, participate_passcode")
-        .eq("id", character.campaign)
+        .eq("id", character.setting)
         .single();
     if (originError) {
         console.error({ originError });

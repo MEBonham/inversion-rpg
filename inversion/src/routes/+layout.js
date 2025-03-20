@@ -18,5 +18,5 @@ export const load = async ({ fetch, data, depends }) => {
         });
     
     const session = isBrowser() ? (await supabase.auth.getSession()).data.session : data.session;
-    return { supabase, session };
+    return { supabase, session, profile: data.profile };
 }

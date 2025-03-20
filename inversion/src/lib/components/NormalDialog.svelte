@@ -1,6 +1,6 @@
 <script>
     import { Dialog, ScrollArea } from "bits-ui";
-	import XIcon from "./icons/XIcon.svelte";
+	import XIcon from "$lib/components/icons/XIcon.svelte";
 
     let { title, children, description="" } = $props();
     let dialogTotalHeight = $state();
