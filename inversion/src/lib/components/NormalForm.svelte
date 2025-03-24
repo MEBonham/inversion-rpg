@@ -4,12 +4,12 @@
     let { children, fct, ...rest } = $props();
 </script>
 
-<form {...rest} use:enhance={fct}>
+<form {...rest} class="normal" use:enhance={fct}>
     {@render children()}
 </form>
 
 <style>
-    form {
+    form.normal {
         max-width: 100%;
         padding: 0.6rem 1.2rem;
         border-radius: 0.8rem;

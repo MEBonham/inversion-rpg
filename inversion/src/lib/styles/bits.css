@@ -1,4 +1,14 @@
 
+/* CHECKBOX */
+form.normal button[data-checkbox-root] {
+    position: relative;
+    top: 0.4rem;
+    margin-right: 0.8rem;
+}
+form.normal button[data-checkbox-root][disabled] {
+    opacity: 0.3;
+}
+
 /* DIALOG */
 div[data-dialog-overlay] {
     position: fixed;
