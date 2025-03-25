@@ -1,7 +1,9 @@
 <script>
     import { goto } from "$app/navigation";
-    import { Dialog } from "bits-ui";
+    import { ContextMenu, Dialog } from "bits-ui";
+    import { handleSubmit } from "$lib/utils.js";
     import NormalPage from "$lib/components/NormalPage.svelte";
+    import Button from "$lib/components/Button.svelte";
     import PlusIcon from "$lib/components/icons/PlusIcon.svelte";
 	import BufferDot from "$lib/components/BufferDot.svelte";
 	import NormalDialog from "$lib/components/NormalDialog.svelte";
@@ -48,6 +50,17 @@
 
     let rumorDialogOpen = $state(false);
     const closeRumorDialog = () => rumorDialogOpen = false;
+
+    let backstoryIdToDelete = $state();
+    const deleteBackstory = () => {
+    // const deleteBackstory = (backstoryId) => {
+        // backstoryIdToDelete = backstoryId;
+        // console.log({ backstoryIdToDelete, inputVal: document.querySelector("#deleteBackstoryForm input").value });
+        const form = document.getElementById("deleteBackstoryForm");
+        form.requestSubmit();
+    };
+
+    let loading = $state(false);
 </script>
 
 <NormalPage title={initialLoad ? "Loading ..." : cur.character_name}>
@@ -89,15 +102,35 @@
                         </Dialog.Root>
                     {/if}
                 </header>
+                <form id="deleteBackstoryForm" method="post" action="?/deleteBackstory" fct={() => handleSubmit(loading)}>
+                    <input type="hidden" name="backstoryIdToDelete" id="backstoryIdToDelete" bind:value={backstoryIdToDelete} />
+                </form>
                 {#each backstories as backstory}
-                    <article class="backstory">
-                        {#if backstory.is_rumor}
-                            <em>({backstory.is_true ? "True" : "False"} rumor)</em>
-                            <BufferDot />
-                        {/if}
-                        <strong>{backstory.short_summary}{backstory.description ? ":" : ""}</strong>
-                        <p>{backstory.description}</p>
-                    </article>
+                    <ContextMenu.Root onOpenChange={() => backstoryIdToDelete = backstory.id}>
+                        <ContextMenu.Trigger>
+                            {#snippet child({ props })}
+                                <article class="backstory clickable" {...props}>
+                                    {#if backstory.is_rumor}
+                                        <em>({backstory.is_true ? "True" : "False"} rumor)</em>
+                                        <BufferDot />
+                                    {/if}
+                                    <strong>{backstory.short_summary}{backstory.description ? ":" : ""}</strong>
+                                    <p>{backstory.description}</p>
+                                </article>
+                            {/snippet}
+                        </ContextMenu.Trigger>
+                        <ContextMenu.Portal to="#page">
+                            <ContextMenu.Content>
+                                <ContextMenu.Item>
+                                    <!-- <Button onclick={() => {
+                                        console.log(backstory.id);
+                                        deleteBackstory(backstory.id)
+                                    }}>Delete Rumor/Backstory</Button> -->
+                                    <Button onclick={() => deleteBackstory()}>Delete Rumor/Backstory</Button>
+                                </ContextMenu.Item>
+                            </ContextMenu.Content>
+                        </ContextMenu.Portal>
+                    </ContextMenu.Root>
                 {/each}
             </footer>
         </header>

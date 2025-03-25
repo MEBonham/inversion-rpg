@@ -52,4 +52,23 @@ export const actions = {
         }
         return {};
     },
+    deleteBackstory: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const backstoryId = formData.get("backstoryIdToDelete");
+        const { data: backstory, error: backstoryError } = await supabase.from("backstories")
+            .select("*")
+            .eq("id", backstoryId)
+            .single();
+        if (backstoryError) {
+            console.error({ backstoryError });
+            return fail(500, { message: backstoryError.message || "Something went wrong." }, { src: "deleteBackstory" });
+        }
+
+        if (!verifyEditPermission(supabase, getProfile, backstory.owner)) {
+            return fail(403, { message: "Forbidden" }, { src: "deleteBackstory" });
+        }
+
+        await supabase.from("backstories").delete().eq("id", backstoryId);
+        return {};
+    },
 };
