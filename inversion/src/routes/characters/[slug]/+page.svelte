@@ -176,7 +176,7 @@
             }
         }
         & > footer {
-            margin-top: 0.8rem;
+            margin-top: 1.4rem;
             width: 100%;
             border: 1px solid var(--invertParchment);
             border-radius: 0.4rem;

@@ -1,6 +1,11 @@
 ## Reference
 1. https://github.com/j4w8n/sveltekit-supabase-ssr
 
+## Requests
+1. "How to Play" tab
+2. Blog tab
+3. 
+
 ## Outstanding Issues:
 1. I don't know why MobileOverlay div#overlayPanelVisual is not transitioning out correctly (or incorrectly). It just doesn't transition. I want it to fade. I'm worried that it will shrink gradually due to the existing CSS `transition` property.
 2. Zod validation.

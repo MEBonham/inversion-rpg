@@ -2,7 +2,8 @@
     import { page } from "$app/stores";
     import { Popover } from "bits-ui";
     import { modes } from "$lib/store.svelte.js";
-    import DiceTray from "./DiceTray.svelte";
+    import DiceTray from "$lib/components/layout/DiceTray.svelte";
+	import { ADMIN_AUTH } from "$lib/constants";
 
     let { closeFct = () => {} } = $props();
     const { data } = $page;
@@ -34,7 +35,7 @@
             <li>
                 <Popover.Trigger>
                     {#snippet child({ props })}
-                        <button {...props}>Play Inversion</button>                        
+                        <button {...props}>Dice Roller</button>                        
                     {/snippet}
                 </Popover.Trigger>
                 <DiceTray />
@@ -45,6 +46,11 @@
         <li>
             <a href="/settings" onclick={closeFct}>Account & Settings</a>
         </li>
+        {#if data.profile.auth_num >= ADMIN_AUTH}
+            <li>
+                <a href="/admin" onclick={closeFct}>Admin</a>
+            </li>
+        {/if}
     {:else}
         <li>
             <a href="/login" onclick={closeFct}>Login/Register</a>
