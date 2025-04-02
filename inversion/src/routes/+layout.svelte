@@ -75,6 +75,10 @@
                 <img src="/bgs/Right%20Frills.png" alt="frill" class="right" />
                 <img src="/bgs/Background%20Gear%20Left.png" alt="rivet" class="cornerLeft" />
                 <img src="/bgs/Background%20Gear%20Right.png" alt="rivet" class="cornerRight" />
+                <img src="/bgs/Inverted%20Left%20Frills.png" alt="frill" class="left darkMode" />
+                <img src="/bgs/Inverted%20Right%20Frills.png" alt="frill" class="right darkMode" />
+                <img src="/bgs/Inverted%20Background%20Gear%20Left.png" alt="rivet" class="cornerLeft darkMode" />
+                <img src="/bgs/Inverted%20Background%20Gear%20Right.png" alt="rivet" class="cornerRight darkMode" />
                 <ScrollArea.Viewport class="pageViewport">
                     {@render children()}
                     <AppFooter />
@@ -104,6 +108,11 @@
 
     img {
         position: absolute;
+        z-index: var(--lightFrillZ);
+
+        &.darkMode {
+            z-index: var(--darkFrillZ);
+        }
     }
     img.left {
         bottom: -0.4rem;

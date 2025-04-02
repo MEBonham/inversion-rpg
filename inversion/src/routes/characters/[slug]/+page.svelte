@@ -67,10 +67,9 @@
     {#if !initialLoad}
         <header class="sheetHeader">
             <header>
-                <img src="/charSheet/charSheetHeadLogo.png" alt="logo" />
                 <div>
                     <main>
-                        <p>Background: _________</p>
+                        <p>Background(s): _________</p>
                         <p>Ancestry: ___________</p>
                     </main>
                     <aside>

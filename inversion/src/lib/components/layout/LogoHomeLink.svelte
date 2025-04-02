@@ -11,8 +11,8 @@
 <style>
     header {
         width: 100%;
-        background-color: var(--parchment);
-        box-shadow: 0 0 2.2rem var(--invertParchment) inset;
+        background-color: var(--consistentLight);
+        box-shadow: 0 0 2.2rem var(--consistentDark) inset;
         display: flex;
         justify-content: center;
 
