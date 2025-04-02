@@ -6,6 +6,8 @@
 
     const tools = [
         { title: "Add to Library", value: "lib" },
+        { title: "Blog Posts", value: "blog" },
+        { title: "How to Play Guide", value: "howToPlay" },
         { title: "Manage Users", value: "userMgt" },
     ];
     let activeTab = $state("lib");
