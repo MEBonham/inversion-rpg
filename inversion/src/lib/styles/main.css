@@ -25,6 +25,8 @@
     --boldTorquoise: hsl(190, 67.5%, 37.6%);
     --warningColor: hsl(0, 100%, 30%);
     --warningHover: hsl(0, 100%, 43%);
+    --lightFrillZ: 1;
+    --darkFrillZ: -1;
 
     --consistentDark: hsl(231, 42%, 6%);
     --consistentLight: hsl(43, 39%, 88%);
@@ -37,6 +39,8 @@
     --boldTorquoise: hsl(10, 68%, 62%);
     --warningColor: hsl(1990,37%, 63%);
     --warningHover: hsl(1990,37%, 50%);
+    --lightFrillZ: -1;
+    --darkFrillZ: 1;
 }
 
 html {

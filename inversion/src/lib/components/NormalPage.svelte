@@ -2,7 +2,7 @@
     let { children, title } = $props();
 </script>
 
-<main>
+<main id="page">
     <header>
         <h1>{title}</h1>
     </header>

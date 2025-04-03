@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import * as jose from "jose";
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from "$env/static/public";
 import { JWT_SECRET } from "$env/static/private";
+import { getProfileOrNull } from "$lib/server/serverUtils";
 
 export const handle = async ({ event, resolve }) => {
     event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
@@ -18,8 +19,9 @@ export const handle = async ({ event, resolve }) => {
 
     event.locals.getSession = async () => {
         const { data: { session } } = await event.locals.supabase.auth.getSession();
-        console.log({ session });
         if (!session) return null;
+
+        const profile = await getProfileOrNull(event.locals.supabase, session.user?.id);
 
         try {
             const { payload: decoded } = await jose.jwtVerify(
@@ -27,11 +29,11 @@ export const handle = async ({ event, resolve }) => {
                 new TextEncoder().encode(JWT_SECRET)
             );
             const validatedSession = {
-                accessToken: session.access_token,
-                refreshToken: session.refresh_token,
-                expiresAt: decoded.exp,
-                expiresIn: decoded.exp - Math.round(Date.now() / 1000),
-                tokenType: "bearer",
+                access_token: session.access_token,
+                refresh_token: session.refresh_token,
+                expires_at: decoded.exp,
+                expires_in: decoded.exp - Math.round(Date.now() / 1000),
+                token_type: "bearer",
                 user: {
                     app_metadata: decoded.app_metadata ?? {},
                     aud: "authenticated",
@@ -39,10 +41,9 @@ export const handle = async ({ event, resolve }) => {
                     email: decoded.email,
                     user_metadata: {
                         avatar_url: decoded.user_metadata?.avatar_url ?? "",
-                        username: decoded.user_metadata?.username ?? "",
-                        auth_num: decoded.auth_num ?? 0,
-                    }
-                }
+                    },
+                    is_anonymous: decoded.is_anonymous,
+                },
             };
             return validatedSession;
         } catch(err) {
@@ -50,7 +51,12 @@ export const handle = async ({ event, resolve }) => {
             return null;
         }
     }
-    const session = await event.locals.getSession();
+
+    event.locals.getProfile = async () => {
+        const { data: { user } } = await event.locals.supabase.auth.getUser();
+        const profile = await getProfileOrNull(event.locals.supabase, user?.id);
+        return profile;
+    }
 
     return resolve(event, {
         filterSerializedResponseHeaders(name) {

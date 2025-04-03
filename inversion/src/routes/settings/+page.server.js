@@ -9,5 +9,6 @@ export const load = async ({ locals: { getSession } }) => {
 export const actions = {
     logout: async ({ locals: { supabase } }) => {
         await supabase.auth.signOut();
+        redirect(303, "/login");
     },
 }

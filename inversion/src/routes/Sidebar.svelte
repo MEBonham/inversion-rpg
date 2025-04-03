@@ -3,7 +3,7 @@
 	import ToC from "$lib/components/layout/ToC.svelte";
 </script>
 
-<aside>
+<aside id="appSidebar">
     <LogoHomeLink />
     <div>
         <ToC />
@@ -12,6 +12,7 @@
 
 <style>
     aside {
+        position: relative;
         min-width: 23%;
         height: 100%;
         z-index: 10;

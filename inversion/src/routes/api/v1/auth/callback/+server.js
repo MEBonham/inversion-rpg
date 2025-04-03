@@ -9,6 +9,7 @@ export const GET = async ({ url, locals: { supabase } }) => {
         if (!error) {
             redirect(303, `/${next.slice(1)}`);
         }
+        console.error({ error });
     }
     redirect(303, "/");
 }
