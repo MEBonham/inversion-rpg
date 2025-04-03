@@ -3,14 +3,23 @@
     import NormalPage from "$lib/components/NormalPage.svelte";
 	import Button from "$lib/components/Button.svelte";
     import LibraryAddTab from "./LibraryAddTab.svelte";
+    import BlogPostAdd from "./BlogPostAdd.svelte";
 
     const tools = [
-        { title: "Add to Library", value: "lib" },
         { title: "Blog Posts", value: "blog" },
+        { title: "Add to Library", value: "lib" },
         { title: "How to Play Guide", value: "howToPlay" },
         { title: "Manage Users", value: "userMgt" },
     ];
-    let activeTab = $state("lib");
+    let activeTab = $state("blog");
+    $effect(() => {
+        if (window.localStorage.getItem("inversion-rpg-admin-activeTab") !== null) {
+            activeTab = window.localStorage.getItem("inversion-rpg-admin-activeTab");
+        }
+    });
+    $effect(() => {
+        window.localStorage.setItem("inversion-rpg-admin-activeTab", activeTab);
+    });
 </script>
 
 <NormalPage title="Administration">
@@ -25,5 +34,6 @@
             {/each}
         </Tabs.List>
         <LibraryAddTab />
+        <BlogPostAdd />
     </Tabs.Root>
 </NormalPage>

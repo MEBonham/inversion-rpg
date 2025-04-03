@@ -16,6 +16,9 @@
 
 <ul>
     <li>
+        <a href="/blog" onclick={closeFct}>Blog</a>
+    </li>
+    <li>
         <a href="/campaigns" onclick={closeFct}>Campaigns</a>
     </li>
     <li>
