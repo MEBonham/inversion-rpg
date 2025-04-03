@@ -38,8 +38,10 @@
     <NormalForm method="post" action="?/blogPost" fct={() => handleSubmit(loading)}>
         <input type="hidden" name="editingId" id="editingId" value={selectedPostToEdit} />
         <header>
-            <h2>Blog Entry</h2>
-            <BufferDot />
+            <h2>
+                Blog Entry
+                &middot;
+            </h2>
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
                     {#snippet child({ props })}
@@ -88,5 +90,9 @@
     header {
         display: flex;
         align-items: center;
+
+        & h2 {
+            margin-right: 1.0rem;
+        }
     }
 </style>
