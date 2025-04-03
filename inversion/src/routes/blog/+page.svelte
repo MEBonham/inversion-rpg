@@ -5,7 +5,7 @@
     let { data } = $props();
 </script>
 
-<NormalPage title="News & Announcements">
+<NormalPage title="Inversion Blog">
     {#each data.blogs as blog, index}
         <BlogArticle {blog} {index} />
     {/each}

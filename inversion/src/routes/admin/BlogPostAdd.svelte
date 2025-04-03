@@ -92,6 +92,8 @@
         align-items: center;
 
         & h2 {
+            position: relative;
+            top: -0.3rem;
             margin-right: 1.0rem;
         }
     }
