@@ -32,6 +32,19 @@
     let mobileVersion = $derived(screenWidth <= MOBILE_WIDTH);
     $effect(() => {
         modes.setIsOnMobile(mobileVersion);
+        if (mobileVersion) {
+            document.querySelector(":root").style.setProperty("--gearsDisplay", "none");
+            document.querySelector(":root").style.setProperty("--frillsTop", "0");
+            document.querySelector(":root").style.setProperty("--frillsBottom", "1.8rem");
+            document.querySelector(":root").style.setProperty("--frillsPaddingLeft", "4.2rem");
+            document.querySelector(":root").style.setProperty("--frillsPaddingRight", "3.2rem");
+        } else {
+            document.querySelector(":root").style.setProperty("--gearsDisplay", "block");
+            document.querySelector(":root").style.setProperty("--frillsTop", "4.6rem");
+            document.querySelector(":root").style.setProperty("--frillsBottom", "-0.4rem");
+            document.querySelector(":root").style.setProperty("--frillsPaddingLeft", "6.0rem");
+            document.querySelector(":root").style.setProperty("--frillsPaddingRight", "6.0rem");
+        }
     });
 
     // Hide the Loading overlay once the refresh "flash" is done
@@ -115,21 +128,23 @@
         }
     }
     img.left {
-        bottom: -0.4rem;
+        bottom: var(--frillsBottom);
         left: 0.8rem;
-        height: calc(100% - 4.2rem);
+        top: var(--frillsTop);
     }
     img.right {
-        bottom: -0.4rem;
+        bottom: var(--frillsBottom);
         right: 0.8rem;
-        height: calc(100% - 4.5rem);
+        top: var(--frillsTop);
     }
     img.cornerLeft {
+        display: var(--gearsDisplay);
         top: 0.4rem;
         left: 0.4rem;
         height: 6.0rem;
     }
     img.cornerRight {
+        display: var(--gearsDisplay);
         top: 0.4rem;
         right: 0.4rem;
         height: 6.0rem;

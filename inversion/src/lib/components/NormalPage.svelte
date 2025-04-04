@@ -18,7 +18,10 @@
         background-image: url("/bgs/transParchment.png");
         background-position: center;
         background-size: cover;
-        padding: 0.6rem 6.0rem 2.4rem;
+        padding-top: 0.6rem;
+        padding-bottom: 2.4rem;
+        padding-left: var(--frillsPaddingLeft);
+        padding-right: var(--frillsPaddingRight);
 
         & > header {
             width: 100%;

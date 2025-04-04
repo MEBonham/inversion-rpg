@@ -24,7 +24,7 @@
     <li>
         <a href="/characters" onclick={closeFct}>Characters</a>
     </li>
-    {#if modes.isOnMobile}
+    <!-- {#if modes.isOnMobile}
         <li>
             <button onclick={() => {
                 modes.setDiceRollerMode(!modes.diceRollerMode);
@@ -44,7 +44,7 @@
                 <DiceTray />
             </li>
         </Popover.Root>
-    {/if}
+    {/if} -->
     {#if data.profile}
         <li>
             <a href="/settings" onclick={closeFct}>Account & Settings</a>

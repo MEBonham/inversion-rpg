@@ -33,4 +33,8 @@
             align-items: center;
         }
     }
+
+    :global(:root.darkMode) aside#appSidebar {
+        box-shadow: 0 0 0;
+    }
 </style>

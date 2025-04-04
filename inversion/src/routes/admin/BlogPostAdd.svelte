@@ -18,11 +18,12 @@
     let dbFriendly = $derived(JSON.stringify(contents));
 
     let selectedPostToEdit = $state(0);
+    let postToEditIsOpen = $state(false);
     $effect(() => {
         if (!selectedPostToEdit) {
             titleInput = "";
             tagsInput = "";
-            contents = undefined;
+            if (quillRef) quillRef.setContents([]);
         } else {
             const post = $page.data.blogEntries.find((entry) => entry.id === selectedPostToEdit);
             titleInput = post.title;
@@ -42,7 +43,7 @@
                 Blog Entry
                 &middot;
             </h2>
-            <DropdownMenu.Root>
+            <DropdownMenu.Root bind:open={postToEditIsOpen}>
                 <DropdownMenu.Trigger>
                     {#snippet child({ props })}
                         <Button {...props}>
@@ -51,10 +52,15 @@
                     {/snippet}
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content class="adminPage">
+                    <DropdownMenu.Item>
+                        {#snippet child({ props })}
+                            <div {...props} onclick={() => { selectedPostToEdit = 0; postToEditIsOpen = false; }}>(New)</div>
+                        {/snippet}
+                    </DropdownMenu.Item>
                     {#each $page.data.blogEntries as entry}
                         <DropdownMenu.Item>
                             {#snippet child({ props })}
-                                <div { ...props } onclick={() => selectedPostToEdit = entry.id}>
+                                <div { ...props } onclick={() => { selectedPostToEdit = entry.id; postToEditIsOpen = false; }}>
                                     {entry.title}
                                 </div>
                             {/snippet}
