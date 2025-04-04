@@ -1,4 +1,4 @@
-import { fail, redirect } from "@sveltejs/kit";
+import { error, fail, redirect } from "@sveltejs/kit";
 import { ADMIN_AUTH } from "$lib/constants";
 
 export const load = async ({ locals: { supabase, getProfile } }) => {
@@ -29,8 +29,8 @@ export const actions = {
         }
 
         // If editing an existing post, update it. Otherwise, create a new one.
-        const editingId = formData.get("editingId");
-        if (editingId !== null) {
+        const editingId = parseInt(formData.get("editingId"));
+        if (editingId) {
             const { error } = await supabase.from("blog_entries").update({
                 title: formData.get("title"),
                 tags: formData.get("tags").split(";").map((tag) => tag.trim()),
