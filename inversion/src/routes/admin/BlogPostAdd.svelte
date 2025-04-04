@@ -17,7 +17,7 @@
     let contents = $state();
     let dbFriendly = $derived(JSON.stringify(contents));
 
-    let selectedPostToEdit = $state(null);
+    let selectedPostToEdit = $state(0);
     $effect(() => {
         if (!selectedPostToEdit) {
             titleInput = "";

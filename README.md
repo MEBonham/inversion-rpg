@@ -15,4 +15,5 @@
 6. NormalDialog fills max-height attribute even if it doesn't need to.
 7. TEMP Policies in RLS on Supabase.
 8. How to fetch supabase foreign-key data in a single query?
-9. 
+9. Editing a blog post: restrict to original author or superadmin.
+10. 
