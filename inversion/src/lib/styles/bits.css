@@ -46,10 +46,12 @@ div[data-dialog-content] {
 /* DROPDOWN MENU */
 div[data-dropdown-menu-content] {
     background-color: var(--parchment);
+    color: var(--invertParchment);
     border-radius: 0.6rem;
     box-shadow: 0 0 0.6rem var(--invertParchment);
     padding: 0.2rem 0;
-
+    overflow-y: hidden;
+    
     & div[data-dropdown-menu-item] {
         padding: 0.2rem 0.6rem;
         cursor: pointer;

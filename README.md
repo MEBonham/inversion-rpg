@@ -16,4 +16,5 @@
 7. TEMP Policies in RLS on Supabase.
 8. How to fetch supabase foreign-key data in a single query?
 9. Editing a blog post: restrict to original author or superadmin.
-10. 
+10. Picking out a past blog post to edit: auto-complete box instead of dropdown.
+11. 
