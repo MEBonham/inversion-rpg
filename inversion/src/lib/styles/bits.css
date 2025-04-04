@@ -81,19 +81,17 @@ div[data-scroll-area-viewport].pageViewport > div[data-scroll-area-content] {
 div[data-tabs-root].normal {
     width: 100%;
     border-radius: 0.8rem;
-    background-color: var(--lightTorquoise);
+    background-color: var(--invertParchment);
+    color: var(--parchment);
 
     & div[data-tabs-list] {
         margin: 0 0.4rem;
         padding: 0.4rem 0.2rem;
-        border-bottom: 1px solid var(--invertParchment);
+        border-bottom: 1px solid var(--parchment);
         display: flex;
         justify-content: space-between;
     }
     & div[data-tabs-content] {
         padding: 0.8rem 1.2rem;
-    }
-    & h2 {
-        text-shadow: 0 0 0.6rem var(--parchment);
     }
 }

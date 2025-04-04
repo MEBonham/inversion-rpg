@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "bits-ui";
+    import { Dialog, Tabs } from "bits-ui";
     import Button from "$lib/components/Button.svelte";
     import BufferDot from "$lib/components/BufferDot.svelte";
     import NormalDialog from "$lib/components/NormalDialog.svelte";
@@ -14,40 +14,44 @@
     const closeDialog = (whichDialog) => dialogsOpen[whichDialog] = false;
 </script>
 
-<section>
-    <header>
-        <h2>Add to Library</h2>
-    </header>
-    <Dialog.Root bind:open={dialogsOpen.languages}>
-        <Dialog.Trigger>
-            {#snippet child({ props })}
-                <Button {...props}>Languages</Button>
-            {/snippet}
-        </Dialog.Trigger>
-        <NormalDialog title="New Language">
-            <NewLanguagesForm action="?/newLanguage" closeDialog={() => closeDialog("languages")} />
-        </NormalDialog>
-    </Dialog.Root>
-    <BufferDot />
-    <Dialog.Root bind:open={dialogsOpen.backgrounds}>
-        <Dialog.Trigger>
-            {#snippet child({ props })}
-                <Button {...props}>Backgrounds</Button>
-            {/snippet}
-        </Dialog.Trigger>
-        <NormalDialog title="New Background">
-            <NewBackgroundForm action="?/newBackground" closeDialog={() => closeDialog("backgrounds")} />
-        </NormalDialog>
-    </Dialog.Root>
-    <BufferDot />
-    <Dialog.Root bind:open={dialogsOpen.ancestries}>
-        <Dialog.Trigger>
-            {#snippet child({ props })}
-                <Button {...props}>Ancestries</Button>
-            {/snippet}
-        </Dialog.Trigger>
-    </Dialog.Root>
-</section>
+<Tabs.Content value="lib">
+    {#snippet child({ props })}
+        <section { ...props }>
+            <header>
+                <h2>Add to Library</h2>
+            </header>
+            <Dialog.Root bind:open={dialogsOpen.languages}>
+                <Dialog.Trigger>
+                    {#snippet child({ props })}
+                        <Button {...props}>Languages</Button>
+                    {/snippet}
+                </Dialog.Trigger>
+                <NormalDialog title="New Language">
+                    <NewLanguagesForm action="?/newLanguage" closeDialog={() => closeDialog("languages")} />
+                </NormalDialog>
+            </Dialog.Root>
+            <BufferDot />
+            <Dialog.Root bind:open={dialogsOpen.backgrounds}>
+                <Dialog.Trigger>
+                    {#snippet child({ props })}
+                        <Button {...props}>Backgrounds</Button>
+                    {/snippet}
+                </Dialog.Trigger>
+                <NormalDialog title="New Background">
+                    <NewBackgroundForm action="?/newBackground" closeDialog={() => closeDialog("backgrounds")} />
+                </NormalDialog>
+            </Dialog.Root>
+            <BufferDot />
+            <Dialog.Root bind:open={dialogsOpen.ancestries}>
+                <Dialog.Trigger>
+                    {#snippet child({ props })}
+                        <Button {...props}>Ancestries</Button>
+                    {/snippet}
+                </Dialog.Trigger>
+            </Dialog.Root>
+        </section>
+    {/snippet}
+</Tabs.Content>
 
 <style>
     section {
