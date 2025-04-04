@@ -50,7 +50,7 @@
                         </Button>
                     {/snippet}
                 </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
+                <DropdownMenu.Content class="adminPage">
                     {#each $page.data.blogEntries as entry}
                         <DropdownMenu.Item>
                             {#snippet child({ props })}

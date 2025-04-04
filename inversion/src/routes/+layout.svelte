@@ -174,5 +174,12 @@
             font-family: "Girassol", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             color: var(--headerColor);
         }
+
+        & :global(div.ql-editor) {
+
+            & :global(p) {
+                margin: 0.8rem 0;
+            }
+        }
     }
 </style>
