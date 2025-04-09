@@ -9,7 +9,7 @@ export const load = async ({ locals: { supabase, getProfile } }) => {
 
     // Load blog entries written by the admin, or all for a super admin
     const { data: blogEntries, error: blogEntriesError } = await supabase.from("blog_entries")
-        .select("id, title, created_at, tags, content")
+        .select("id, title, created_at, tags, content, is_public")
         .order("created_at", { ascending: false });
     if (blogEntriesError) {
         console.error({ blogEntriesError });
@@ -47,6 +47,7 @@ export const actions = {
                 tags: formData.get("tags").split(";").map((tag) => tag.trim()),
                 content: JSON.parse(formData.get("content")),
                 updated_at: new Date().toISOString(),
+                is_public: formData.get("public") === "true",
             }).eq("id", editingId);
         } else {
             const { error } = await supabase.from("blog_entries").insert({
@@ -55,6 +56,7 @@ export const actions = {
                 author_label: profile.username || "Admin",
                 tags: formData.get("tags").split(";").map((tag) => tag.trim()),
                 content: JSON.parse(formData.get("content")),
+                is_public: formData.get("public") === "true",
             });
             if (error) {
                 console.error({ error });
