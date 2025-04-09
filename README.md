@@ -17,4 +17,5 @@
 8. How to fetch supabase foreign-key data in a single query?
 9. Editing a blog post: restrict to original author or superadmin.
 10. Picking out a past blog post to edit: auto-complete box instead of dropdown.
-11. 
+11. Is there a way to make Chapters' chapter_num column in the db DEFERRED UNIQUE? https://stackoverflow.com/questions/37492789/swapping-records-values-for-a-column-with-a-unique-constraint-in-postgresql (wihtout breaking the foreign key relationship)
+12. 

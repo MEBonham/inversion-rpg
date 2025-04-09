@@ -1,11 +1,14 @@
 <script>
     import { page } from "$app/stores";
+    import { flip } from "svelte/animate";
     import { DropdownMenu, Tabs } from "bits-ui";
+    import { dragHandleZone, dragHandle } from "svelte-dnd-action";
     import { handleSubmit } from "$lib/utils.js";
     import Button from "$lib/components/Button.svelte";
     import NormalForm from "$lib/components/NormalForm.svelte";
     import QuillEditor from "$lib/components/QuillEditor.svelte";
 	import BufferDot from "$lib/components/BufferDot.svelte";
+	import DominoHandleIcon from "$lib/components/icons/DominoHandleIcon.svelte";
 
     let quillRef = $state();
     const bindToQuill = (quillInstance) => {
@@ -16,6 +19,12 @@
     let tagsInput = $state("");
     let contents = $state();
     let dbFriendly = $derived(JSON.stringify(contents));
+
+    const flipDurationMs = 100;
+    let chaptersCopy = $state($page.data.chapters);
+    const handleSort = ({ detail }) => {
+        chaptersCopy = detail.items;
+    }
 
     let selectedPostToEdit = $state(0);
     let postToEditIsOpen = $state(false);
@@ -35,12 +44,39 @@
     let loading = $state(false);
 </script>
 
-<Tabs.Content value="blog">
+<Tabs.Content value="howToPlay">
+    <section id="chapterMod">
+        <header>
+            <h2>Chapters Structure</h2>
+        </header>
+        <section use:dragHandleZone="{{ items: chaptersCopy, flipDurationMs }}" onconsider="{handleSort}" onfinalize="{handleSort}">
+            {#each chaptersCopy as chapter, index (chapter.id)}
+                <article animate:flip="{{ duration: flipDurationMs }}">
+                    <div use:dragHandle aria-label="drag-handle for {chapter.title}">
+                        <DominoHandleIcon size="1.2rem" />
+                    </div>
+                    <strong>{index + 1}</strong>
+                    <input type="text" name="title" required bind:value={chaptersCopy[index].title} />
+                    <div class="chapterId">{chapter.id}</div>
+                </article>
+            {/each}
+        </section>
+        <footer>
+            <Button onclick={() => { chaptersCopy = [...chaptersCopy, { id: Math.random(), title: "New Chapter" }] }}>
+                New Chapter
+            </Button>
+            <form method="post" action="?/saveChapters" fct={() => handleSubmit(loading)}>
+                <input type="hidden" name="chapters" id="chapters" value={JSON.stringify(chaptersCopy)} />
+                <Button type="submit">Save</Button>
+            </form>
+        </footer>
+    </section>
+
     <NormalForm method="post" action="?/blogPost" fct={() => handleSubmit(loading)}>
         <input type="hidden" name="editingId" id="editingId" value={selectedPostToEdit} />
-        <header>
+        <header class="quillEditorSection">
             <h2>
-                Blog Entry
+                Rules Section
                 &middot;
             </h2>
             <DropdownMenu.Root bind:open={postToEditIsOpen}>
@@ -74,14 +110,17 @@
             <input type="text" name="title" id="title" required bind:value={titleInput} />
         </label>
         <div class="twoColumn">
-            <label for="tags">
-                <span>Tags (semicolon-separated):</span>
-                <input type="text" name="tags" id="tags" bind:value={tagsInput} />
+            <label for="chapterNum">
+                <span>Chapter:</span>
+                <input type="number" name="chapterNum" id="chapterNum" required />
             </label>
-            
+            <label for="sectionNum">
+                <span>Section:</span>
+                <input type="number" name="sectionNum" id="sectionNum" required />
+            </label>
         </div>
         <input type="hidden" name="content" id="content" value={dbFriendly} />
-        <QuillEditor bind:editor={contents} {bindToQuill} index="blog" />
+        <QuillEditor bind:editor={contents} {bindToQuill} index="rulesSummary" />
         {#if $page.form?.src === "blogPost"}
             <p class={$page.form.isError ? "warning" : ""}>
                 {$page.form.message || "ERROR: Something went wrong."}
@@ -96,7 +135,55 @@
 </Tabs.Content>
 
 <style>
-    header {
+    section#chapterMod {
+        margin-bottom: 1.2rem;
+        padding: 0 1.2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+
+        & > section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+
+            & article {
+                padding: 0.2rem 1.2rem;
+                border-radius: 0.6rem;
+                box-shadow: 0 0 0.6rem var(--boldTorquoise);
+                display: flex;
+                gap: 1.2rem;
+                align-items: center;
+    
+                & input {
+                    background-color: ivory;
+                    border-radius: 0.4rem;
+                    padding: 0.2rem 0.6rem;
+                    color: var(--invertParchment);
+                }
+                div.chapterId {
+                    opacity: 0;
+                }
+            }
+        }
+        & footer {
+            margin-top: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    div.twoColumn {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        & label {
+            width: calc(50% - 3.6rem);
+        }
+    }
+
+    header.quillEditorSection {
         display: flex;
         align-items: center;
 

@@ -15,8 +15,19 @@ export const load = async ({ locals: { supabase, getProfile } }) => {
         console.error({ blogEntriesError });
         return fail(500, { message: blogEntriesError.message || "Something went wrong." });
     }
+
+    // Load chapters info
+    const { data: chapters, error: chaptersError } = await supabase.from("rules_chapters")
+        .select("id, title, chapter_num");
+
+    // Load sections info
+    const { data: rulesSummaries, error: rulesSummariesError } = await supabase.from("rules_summaries")
+        .select("id, title, created_at, chapter_num, section_num, content");
+
     return {
         blogEntries: blogEntries.filter((entry) => entry.author_id === profile.id || profile.auth_num > ADMIN_AUTH),
+        chapters: chapters.sort((a, b) => a.chapter_num - b.chapter_num),
+        rulesSummaries: rulesSummaries.sort((a, b) => a.chapter_num - b.chapter_num || a.section_num - b.section_num),
     };
 };
 
@@ -84,6 +95,50 @@ export const actions = {
             console.error({ error });
             return fail(500, { message: error.message || "Something went wrong." }, { src: "newLanguage" });
         }
+        return {};
+    },
+    saveChapters: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const profile = await getProfile();
+        if (!profile || profile.auth_num < ADMIN_AUTH) {
+            throw error(403, "Forbidden");
+        }
+
+        const newChapters = JSON.parse(formData.get("chapters"));
+        const promises = newChapters.map(async (chapter, i) => {
+            const chapterObj = {
+                chapter_num: -1 - i,
+                title: chapter.title,
+            };
+            if (chapter.id % 1 === 0) {
+                chapterObj.id = chapter.id;
+            }
+            const { error: chapterError } = await supabase.from("rules_chapters").upsert(
+                chapterObj
+            );
+            if (chapterError) {
+                console.error({ chapterError });
+                return fail(500, { message: chapterError.message || "Something went wrong." }, { src: "saveChapters" });
+            }
+        });
+        await Promise.all(promises);
+        const { data: negativeChapterNums, error: findError } = await supabase.from("rules_chapters")
+            .select("id, chapter_num, title")
+            .lt("chapter_num", 0);
+        if (findError) {
+            console.error({ findError });
+            return fail(500, { message: findError.message || "Something went wrong." }, { src: "saveChapters" });
+        }
+        const { error: flipError } = await supabase.from("rules_chapters")
+            .upsert(negativeChapterNums.map((entry) => ({
+                ...entry,
+                chapter_num: (-1) * entry.chapter_num,
+            })));
+        if (flipError) {
+            console.error({ flipError });
+            return fail(500, { message: flipError.message || "Something went wrong." }, { src: "saveChapters" });
+        }
+        
         return {};
     },
 };

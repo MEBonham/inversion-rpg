@@ -4,6 +4,7 @@
 	import Button from "$lib/components/Button.svelte";
     import LibraryAddTab from "./LibraryAddTab.svelte";
     import BlogPostAdd from "./BlogPostAdd.svelte";
+    import RulesSummaryAddEdit from "./RulesSummaryAddEdit.svelte";
 
     const tools = [
         { title: "Blog Posts", value: "blog" },
@@ -35,5 +36,6 @@
         </Tabs.List>
         <LibraryAddTab />
         <BlogPostAdd />
+        <RulesSummaryAddEdit />
     </Tabs.Root>
 </NormalPage>
