@@ -16,7 +16,8 @@
     }
 
     let titleInput = $state("");
-    let tagsInput = $state("");
+    let chapterNumInput = $state("");
+    let sectionNumInput = $state("");
     let contents = $state();
     let dbFriendly = $derived(JSON.stringify(contents));
 
@@ -26,17 +27,19 @@
         chaptersCopy = detail.items;
     }
 
-    let selectedPostToEdit = $state(0);
+    let selectedSectionToEdit = $state(0);
     let postToEditIsOpen = $state(false);
     $effect(() => {
-        if (!selectedPostToEdit) {
+        if (!selectedSectionToEdit) {
             titleInput = "";
-            tagsInput = "";
+            chapterNumInput = "";
+            sectionNumInput = "";
             if (quillRef) quillRef.setContents([]);
         } else {
-            const post = $page.data.blogEntries.find((entry) => entry.id === selectedPostToEdit);
+            const post = $page.data.rulesSummaries.find((entry) => entry.id === selectedSectionToEdit);
             titleInput = post.title;
-            tagsInput = post.tags.join(";");
+            chapterNumInput = post.chapter_num;
+            sectionNumInput = post.section_num;
             quillRef.setContents(post.content);
         }
     });
@@ -72,8 +75,8 @@
         </footer>
     </section>
 
-    <NormalForm method="post" action="?/blogPost" fct={() => handleSubmit(loading)}>
-        <input type="hidden" name="editingId" id="editingId" value={selectedPostToEdit} />
+    <NormalForm method="post" action="?/rulesSectionPost" fct={() => handleSubmit(loading)}>
+        <input type="hidden" name="editingId" id="editingId" value={selectedSectionToEdit} />
         <header class="quillEditorSection">
             <h2>
                 Rules Section
@@ -90,14 +93,14 @@
                 <DropdownMenu.Content class="adminPage">
                     <DropdownMenu.Item>
                         {#snippet child({ props })}
-                            <div {...props} onclick={() => { selectedPostToEdit = 0; postToEditIsOpen = false; }}>(New)</div>
+                            <div {...props} onclick={() => { selectedSectionToEdit = 0; postToEditIsOpen = false; }}>(New)</div>
                         {/snippet}
                     </DropdownMenu.Item>
-                    {#each $page.data.blogEntries as entry}
+                    {#each $page.data.rulesSummaries as section}
                         <DropdownMenu.Item>
                             {#snippet child({ props })}
-                                <div { ...props } onclick={() => { selectedPostToEdit = entry.id; postToEditIsOpen = false; }}>
-                                    {entry.title}
+                                <div { ...props } onclick={() => { selectedSectionToEdit = section.id; postToEditIsOpen = false; }}>
+                                    {`Ch. ${section.chapter_num}.${section.section_num}: ${section.title}`}
                                 </div>
                             {/snippet}
                         </DropdownMenu.Item>
@@ -112,11 +115,11 @@
         <div class="twoColumn">
             <label for="chapterNum">
                 <span>Chapter:</span>
-                <input type="number" name="chapterNum" id="chapterNum" required />
+                <input type="number" name="chapterNum" id="chapterNum" bind:value={chapterNumInput} required />
             </label>
             <label for="sectionNum">
                 <span>Section:</span>
-                <input type="number" name="sectionNum" id="sectionNum" required />
+                <input type="number" name="sectionNum" id="sectionNum" bind:value={sectionNumInput} required />
             </label>
         </div>
         <input type="hidden" name="content" id="content" value={dbFriendly} />

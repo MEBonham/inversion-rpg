@@ -19,6 +19,9 @@
         <a href="/blog" onclick={closeFct}>Blog</a>
     </li>
     <li>
+        <a href="/rules" onclick={closeFct}>Rules</a>
+    </li>
+    <li>
         <a href="/campaigns" onclick={closeFct}>Campaigns</a>
     </li>
     <li>

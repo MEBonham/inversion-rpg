@@ -1,5 +1,4 @@
 <script>
-    import { page } from "$app/stores";
     import { invalidate } from "$app/navigation";
     import { Collapsible, ContextMenu, Dialog } from "bits-ui";
 

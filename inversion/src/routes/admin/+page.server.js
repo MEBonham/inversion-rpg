@@ -1,5 +1,6 @@
 import { error, fail, redirect } from "@sveltejs/kit";
 import { ADMIN_AUTH } from "$lib/constants";
+import { clamp } from "$lib/utils";
 
 export const load = async ({ locals: { supabase, getProfile } }) => {
     const profile = await getProfile();
@@ -49,6 +50,10 @@ export const actions = {
                 updated_at: new Date().toISOString(),
                 is_public: formData.get("public") === "true",
             }).eq("id", editingId);
+            if (error) {
+                console.error({ error });
+                return fail(500, { message: error.message || "Something went wrong." }, { src: "blogPost" });
+            }
         } else {
             const { error } = await supabase.from("blog_entries").insert({
                 title: formData.get("title"),
@@ -98,6 +103,44 @@ export const actions = {
             return fail(500, { message: error.message || "Something went wrong." }, { src: "newLanguage" });
         }
         return {};
+    },
+    rulesSectionPost: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const profile = await getProfile();
+        if (!profile || profile.auth_num < ADMIN_AUTH) {
+            throw error(403, "Forbidden");
+        }
+
+        // Load chapters info
+        const { data: chapters, error: chaptersError } = await supabase.from("rules_chapters")
+            .select("id, title, chapter_num");
+        const chapterNum = clamp(parseInt(formData.get("chapterNum")), 1, chapters.length);
+
+        const editingId = parseInt(formData.get("editingId"));
+        if (editingId) {
+            const { error } = await supabase.from("rules_summaries").update({
+                title: formData.get("title"),
+                chapter_num: chapterNum,
+                section_num: parseInt(formData.get("sectionNum")),
+                content: JSON.parse(formData.get("content")),
+            }).eq("id", editingId);
+            if (error) {
+                console.error({ error });
+                return fail(500, { message: error.message || "Something went wrong." }, { src: "rulesSectionPost" });
+            }
+        } else {
+            const { error } = await supabase.from("rules_summaries").insert({
+                title: formData.get("title"),
+                chapter_num: chapterNum,
+                section_num: parseInt(formData.get("sectionNum")),
+                content: JSON.parse(formData.get("content")),
+            });
+            if (error) {
+                console.error({ error });
+                return fail(500, { message: error.message || "Something went wrong." }, { src: "rulesSectionPost" });
+            }
+        }
+        throw redirect(307, `/rules/${chapterNum}`);
     },
     saveChapters: async ({ request, locals: { supabase, getProfile } }) => {
         const formData = await request.formData();
