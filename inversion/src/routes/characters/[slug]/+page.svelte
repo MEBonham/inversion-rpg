@@ -1,13 +1,7 @@
 <script>
     import { goto } from "$app/navigation";
-    import { ContextMenu, Dialog } from "bits-ui";
-    import { handleSubmit } from "$lib/utils.js";
     import NormalPage from "$lib/components/NormalPage.svelte";
-    import Button from "$lib/components/Button.svelte";
-    import PlusIcon from "$lib/components/icons/PlusIcon.svelte";
-	import BufferDot from "$lib/components/BufferDot.svelte";
-	import NormalDialog from "$lib/components/NormalDialog.svelte";
-    import AddRumorForm from "$lib/components/specialty/AddRumorForm.svelte";
+	import RumorsBox from "./RumorsBox.svelte";
 
     let { data } = $props();
     let cur = $derived(data.character);
@@ -48,157 +42,87 @@
         initialLoad = false;
     });
 
-    let rumorDialogOpen = $state(false);
-    const closeRumorDialog = () => rumorDialogOpen = false;
-
-    let backstoryIdToDelete = $state();
-    const deleteBackstory = () => {
-    // const deleteBackstory = (backstoryId) => {
-        // backstoryIdToDelete = backstoryId;
-        // console.log({ backstoryIdToDelete, inputVal: document.querySelector("#deleteBackstoryForm input").value });
-        const form = document.getElementById("deleteBackstoryForm");
-        form.requestSubmit();
-    };
-
     let loading = $state(false);
 </script>
 
 <NormalPage title={initialLoad ? "Loading ..." : cur.character_name}>
     {#if !initialLoad}
-        <header class="sheetHeader">
-            <header>
-                <div>
-                    <main>
-                        <p>Background(s): _________</p>
-                        <p>Ancestry: ___________</p>
-                    </main>
-                    <aside>
-                        <span>{cur.character_level}</span>
-                    </aside>
-                </div>
-            </header>
+        <header id="sheetHeader">
+            <aside>
+                <span>{cur.character_level}</span>
+            </aside>
+            <div>
+                <h2>BACKGROUND(S): _________________________</h2>
+                <h2>ANCESTRY: ________________________________</h2>
+            </div>
+            <RumorsBox {hasEditPermission} curId={cur.id} {backstories} />
             <footer>
-                <header>
-                    <h2>Rumors & Backstory</h2>
-                    <BufferDot />
-                    {#if hasEditPermission}
-                        <Dialog.Root bind:open={rumorDialogOpen}>
-                            <Dialog.Trigger>
-                                {#snippet child({ props })}
-                                    <button { ...props }>
-                                        <PlusIcon size="2.0rem" />
-                                    </button>
-                                {/snippet}
-                            </Dialog.Trigger>
-                            <NormalDialog
-                                title="New Rumor or Backstory"
-                                description="Rumors are small stories and local gossip about your character. When your
-                                name comes up in a tavern, these are what people bring up. Rumors connect you to the world.
-                                They give you details you can build your character on top of."
-                            >
-                                <AddRumorForm editingId={cur.id} action="?/addRumor" closeDialog={closeRumorDialog} />
-                            </NormalDialog>
-                        </Dialog.Root>
-                    {/if}
-                </header>
-                <form id="deleteBackstoryForm" method="post" action="?/deleteBackstory" fct={() => handleSubmit(loading)}>
-                    <input type="hidden" name="backstoryIdToDelete" id="backstoryIdToDelete" bind:value={backstoryIdToDelete} />
-                </form>
-                {#each backstories as backstory}
-                    <ContextMenu.Root onOpenChange={() => backstoryIdToDelete = backstory.id}>
-                        <ContextMenu.Trigger>
-                            {#snippet child({ props })}
-                                <article class="backstory clickable" {...props}>
-                                    {#if backstory.is_rumor}
-                                        <em>({backstory.is_true ? "True" : "False"} rumor)</em>
-                                        <BufferDot />
-                                    {/if}
-                                    <strong>{backstory.short_summary}{backstory.description ? ":" : ""}</strong>
-                                    <p>{backstory.description}</p>
-                                </article>
-                            {/snippet}
-                        </ContextMenu.Trigger>
-                        <ContextMenu.Portal to="#page">
-                            <ContextMenu.Content>
-                                <ContextMenu.Item>
-                                    <!-- <Button onclick={() => {
-                                        console.log(backstory.id);
-                                        deleteBackstory(backstory.id)
-                                    }}>Delete Rumor/Backstory</Button> -->
-                                    <Button onclick={() => deleteBackstory()}>Delete Rumor/Backstory</Button>
-                                </ContextMenu.Item>
-                            </ContextMenu.Content>
-                        </ContextMenu.Portal>
-                    </ContextMenu.Root>
-                {/each}
+                <h2>LANGUAGES: ______________________________</h2>
+                <div>
+                    <h2>SKILL POINTS:</h2> 
+                </div>
             </footer>
         </header>
     {/if}
 </NormalPage>
 
 <style>
-    .sheetHeader {
+    #sheetHeader {
+        position: relative;
+        margin: 1.0rem 0;
+        padding-right: 9.0rem;
         width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.0rem;
 
-        & > header {
-            width: 100%;
+        & > aside {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 8.0rem;
+            aspect-ratio: 1/1;
+            padding: 0.6rem 0;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
+            background-image: url("/charSheet/Level Circle.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
 
-            & img {
-                margin-right: 10%;
-                flex-grow: 1;
-                max-width: 20.0rem;
-            }
-            & > div {
-                flex-grow: 2;
-                display: flex;
-                justify-content: space-between;
-
-                & aside {
-                    min-width: 5.0rem;
-                    aspect-ratio: 1/1;
-                    padding: 0.6rem 0;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    background-image: url("/charSheet/Level Circle.png");
-                    background-size: contain;
-                    background-repeat: no-repeat;
-                    background-position: center;
-
-                    & span {
-                        margin-top: 1.0rem;
-                    }
-                }
+            & span {
+                margin-top: 1.0rem;
+                font-size: 3.8rem;
             }
         }
+        & > div {
+            flex-grow: 1;
+            min-width: 30rem;
+            height: 100%;
+            padding: 1.0rem 3.0rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            gap: 0.6rem;
+        }
         & > footer {
-            margin-top: 1.4rem;
             width: 100%;
-            border: 1px solid var(--invertParchment);
-            border-radius: 0.4rem;
-            padding: 0 1.0rem 0.6rem;
+            padding: 1.0rem 3.0rem;
+            display: flex;
 
-            & article.backstory {
-                display: flex;
-                gap: 0.6rem;
+            & h2 {
+                flex-grow: 2.5;
             }
-
-            & header {
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                & button {
-                    width: 2.0rem;
-                    height: 2.0rem;
-                    margin-top: 0.6rem;
-                    color: var(--boldTorquoise);
-                }
+            & div {
+                flex-grow: 1;
             }
+        }
+
+        & :global(h2) {
+            margin: 0;
+            font-size: 2.0rem;
         }
     }
 </style>
