@@ -25,9 +25,14 @@ export const load = async ({ locals: { supabase, getProfile } }) => {
     const { data: rulesSummaries, error: rulesSummariesError } = await supabase.from("rules_summaries")
         .select("id, title, created_at, chapter_num, section_num, content, is_public");
 
+    // Load languages info
+    const { data: languages, error: languagesError } = await supabase.from("languages")
+        .select("id, language_name");
+
     return {
         blogEntries: blogEntries.filter((entry) => entry.author_id === profile.id || profile.auth_num > ADMIN_AUTH),
         chapters: chapters.sort((a, b) => a.chapter_num - b.chapter_num),
+        languages,
         rulesSummaries: rulesSummaries.sort((a, b) => a.chapter_num - b.chapter_num || a.section_num - b.section_num),
     };
 };

@@ -111,6 +111,7 @@
             width: 100%;
             padding: 1.0rem 3.0rem;
             display: flex;
+            gap: 1.0rem;
 
             & h2 {
                 flex-grow: 2.5;

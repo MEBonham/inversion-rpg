@@ -3,6 +3,7 @@
     import Button from "$lib/components/Button.svelte";
     import BufferDot from "$lib/components/BufferDot.svelte";
     import NormalDialog from "$lib/components/NormalDialog.svelte";
+    import NewAncestryForm from "./NewAncestryForm.svelte";
     import NewBackgroundForm from "./NewBackgroundForm.svelte";
     import NewLanguagesForm from "./NewLanguagesForm.svelte";
 
@@ -48,6 +49,9 @@
                         <Button {...props}>Ancestries</Button>
                     {/snippet}
                 </Dialog.Trigger>
+                <NormalDialog title="New Ancestry">
+                    <NewAncestryForm action="?/newAncestry" closeDialog={() => closeDialog("ancestries")} />
+                </NormalDialog>
             </Dialog.Root>
         </section>
     {/snippet}
