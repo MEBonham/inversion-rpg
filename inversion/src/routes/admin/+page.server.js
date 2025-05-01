@@ -23,7 +23,7 @@ export const load = async ({ locals: { supabase, getProfile } }) => {
 
     // Load sections info
     const { data: rulesSummaries, error: rulesSummariesError } = await supabase.from("rules_summaries")
-        .select("id, title, created_at, chapter_num, section_num, content");
+        .select("id, title, created_at, chapter_num, section_num, content, is_public");
 
     return {
         blogEntries: blogEntries.filter((entry) => entry.author_id === profile.id || profile.auth_num > ADMIN_AUTH),
@@ -123,6 +123,7 @@ export const actions = {
                 chapter_num: chapterNum,
                 section_num: parseInt(formData.get("sectionNum")),
                 content: JSON.parse(formData.get("content")),
+                is_public: formData.get("public") === "true",
             }).eq("id", editingId);
             if (error) {
                 console.error({ error });

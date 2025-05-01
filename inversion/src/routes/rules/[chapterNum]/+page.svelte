@@ -8,9 +8,11 @@
 </script>
 
 <NormalPage title={`${data.activeChapter.chapter_num}) ${data.activeChapter.title}`}>
-    <header>
-        <ChapterNavWidget {chapterIndex} numChapters={data.chapters.length} />
-    </header>
+    {#if data.chapters.length > 1}
+        <header>
+            <ChapterNavWidget {chapterIndex} numChapters={data.chapters.length} />
+        </header>
+    {/if}
 
     {#each data.rulesSummaries as rulesSection}
         <section>
@@ -21,7 +23,9 @@
         </section>
     {/each}
 
-    <footer>
-        <ChapterNavWidget {chapterIndex} numChapters={data.chapters.length} />
-    </footer>
+    {#if data.chapters.length > 1}
+        <footer>
+            <ChapterNavWidget {chapterIndex} numChapters={data.chapters.length} />
+        </footer>
+    {/if}
 </NormalPage>

@@ -9,9 +9,10 @@ export const load = async ({ locals: { supabase }, params }) => {
     }
 
     const { data: rulesSummaries, error: rulesSummariesError } = await supabase.from("rules_summaries")
-        .select("id, title, created_at, chapter_num, section_num, content")
+        .select("id, title, created_at, chapter_num, section_num, content, is_public")
         .order("section_num", { ascending: true })
-        .eq("chapter_num", parseInt(params.chapterNum));
+        .eq("chapter_num", parseInt(params.chapterNum))
+        .eq("is_public", true);
     if (rulesSummariesError) {
         console.error({ rulesSummariesError });
     }

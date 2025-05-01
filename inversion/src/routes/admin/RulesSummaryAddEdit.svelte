@@ -1,7 +1,7 @@
 <script>
     import { page } from "$app/stores";
     import { flip } from "svelte/animate";
-    import { DropdownMenu, Tabs } from "bits-ui";
+    import { DropdownMenu, Tabs, Toggle } from "bits-ui";
     import { dragHandleZone, dragHandle } from "svelte-dnd-action";
     import { handleSubmit } from "$lib/utils.js";
     import Button from "$lib/components/Button.svelte";
@@ -16,6 +16,7 @@
     }
 
     let titleInput = $state("");
+    let publishedToggle = $state(true);
     let chapterNumInput = $state("");
     let sectionNumInput = $state("");
     let contents = $state();
@@ -32,12 +33,14 @@
     $effect(() => {
         if (!selectedSectionToEdit) {
             titleInput = "";
+            publishedToggle = false;
             chapterNumInput = "";
             sectionNumInput = "";
             if (quillRef) quillRef.setContents([]);
         } else {
             const post = $page.data.rulesSummaries.find((entry) => entry.id === selectedSectionToEdit);
             titleInput = post.title;
+            publishedToggle = post.is_public;
             chapterNumInput = post.chapter_num;
             sectionNumInput = post.section_num;
             quillRef.setContents(post.content);
@@ -108,10 +111,20 @@
                 </DropdownMenu.Content>
             </DropdownMenu.Root>
         </header>
-        <label for="title">
-            <span>Title:</span>
-            <input type="text" name="title" id="title" required bind:value={titleInput} />
-        </label>
+        <div class="twoColumn">
+            <label for="title">
+                <span>Title:</span>
+                <input type="text" name="title" id="title" required bind:value={titleInput} />
+            </label>
+            <input type="hidden" name="public" id="public" bind:value={publishedToggle} />
+            <Toggle.Root bind:pressed={publishedToggle}>
+                {#snippet child({ props })}
+                    <Button {...props} id="publishedToggle">
+                        <span>{publishedToggle ? "Published" : "Hidden"}</span>
+                    </Button>
+                {/snippet}
+            </Toggle.Root>
+        </div>
         <div class="twoColumn">
             <label for="chapterNum">
                 <span>Chapter:</span>
@@ -180,9 +193,11 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        gap: 7.2rem;
 
         & label {
-            width: calc(50% - 3.6rem);
+            flex-grow: 1;
         }
     }
 
