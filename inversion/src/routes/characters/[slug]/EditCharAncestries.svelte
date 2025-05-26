@@ -9,15 +9,15 @@
     import TrashIcon from "$lib/components/icons/TrashIcon.svelte";
 
     let { action, closeDialog } = $props();
-    let allBackgrounds = $state([]);
-    let backgrounds = $state(
-        $page.data.character.character_backgrounds.map((obj) => obj.backgrounds)
+    let allAncestries = $state([]);
+    let ancestries = $state(
+        $page.data.character.character_ancestries.map((obj) => obj.ancestries)
     );
-    let selectNewBackgroundOpen = $state(false);
+    let selectNewAncestryOpen = $state(false);
     onMount(async () => {
-        const jsonRes = await fetch("/api/v1/fetchChoices/backgrounds");
+        const jsonRes = await fetch("/api/v1/fetchChoices/ancestries");
         if (jsonRes.ok) {
-            allBackgrounds = await jsonRes.json();
+            allAncestries = await jsonRes.json();
         }
         loading = false;
     });
@@ -31,20 +31,20 @@
 
 <NormalForm method="post" {action} fct={() => handleSubmit(loading, cleanupSubmit)}>
     <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
-    <input type="hidden" name="backgrounds" id="backgrounds" value={JSON.stringify(backgrounds)} />
+    <input type="hidden" name="ancestries" id="ancestries" value={JSON.stringify(ancestries)} />
     <ul>
-        {#each backgrounds as background, index}
+        {#each ancestries as ancestry, index}
             <li>
-                <button class="warning" type="button" onclick={() => backgrounds.splice(index, 1)}>
+                <button class="warning" type="button" onclick={() => ancestries.splice(index, 1)}>
                     <TrashIcon size="1.6rem" />
                 </button>
                 <BufferDot />
-                <span>{background.background_name}</span>
+                <span>{ancestry.ancestry_name}</span>
             </li>
         {/each}
         <li>
-            <span class="needsBufferSpace">Add Background:</span>
-            <DropdownMenu.Root bind:open={selectNewBackgroundOpen}>
+            <span class="needsBufferSpace">Add Ancestry:</span>
+            <DropdownMenu.Root bind:open={selectNewAncestryOpen}>
                 <DropdownMenu.Trigger>
                     {#snippet child({ props })}
                         <Button {...props}>
@@ -53,14 +53,14 @@
                     {/snippet}
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content>
-                    {#each allBackgrounds.filter((background) => !backgrounds.find((existingBackground) => existingBackground.id === background.id)) as background}
+                    {#each allAncestries.filter((ancestry) => !ancestries.find((existingAncestry) => existingAncestry.id === ancestry.id)) as ancestry}
                         <DropdownMenu.Item>
                             {#snippet child({ props })}
                                 <div { ...props } onclick={() => {
-                                    backgrounds.push(background);
-                                    selectNewBackgroundOpen = false;
+                                    ancestries.push(ancestry);
+                                    selectNewAncestryOpen = false;
                                 }}>
-                                    {background.background_name}
+                                    {ancestry.ancestry_name}
                                 </div>
                             {/snippet}
                         </DropdownMenu.Item>

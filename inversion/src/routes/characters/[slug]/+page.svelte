@@ -2,17 +2,24 @@
     import { goto } from "$app/navigation";
     import NormalPage from "$lib/components/NormalPage.svelte";
 	import { Dialog } from "bits-ui";
+	import { calcSkillPoints, calcMaxSkillPoints } from "$lib/characterCalc";
 	import RumorsBox from "./RumorsBox.svelte";
 	import BufferDot from "$lib/components/BufferDot.svelte";
     import NormalDialog from "$lib/components/NormalDialog.svelte";
 	import PencilEditIcon from "$lib/components/icons/PencilEditIcon.svelte";
 	import EditCharBackgrounds from "./EditCharBackgrounds.svelte";
+    import EditCharAncestries from "./EditCharAncestries.svelte";
+    import EditCharLanguages from "./EditCharLanguages.svelte";
 
     let { data } = $props();
+    let profile = $derived(data.profile);
     let cur = $derived(data.character);
+    let skillPointsSpent = $derived(calcSkillPoints(cur));
+    let skillPointsMax = $derived(calcMaxSkillPoints(cur));
     let backstories = $derived(data.backstories);
     let backgroundsMapped = $derived(cur.character_backgrounds.map((obj) => obj.backgrounds));
-    let profile = $derived(data.profile);
+    let ancestriesMapped = $derived(cur.character_ancestries.map((obj) => obj.ancestries));
+    let languagesMapped = $derived(cur.character_languages.map((obj) => obj.languages));
 
     let passcodes = $derived.by(() => {
         if (profile) {
@@ -81,7 +88,7 @@
                         </Dialog.Root>
                         <BufferDot />
                     {/if}
-                    <span>BACKGROUND{cur.character_backgrounds.length > 1 ? "S" : ""}:</span>
+                    <span>BACKGROUND{backgroundsMapped.length > 1 ? "S" : ""}:</span>
                     {#each backgroundsMapped as background, index}
                         {#if index !== 0}
                             <span>, </span>
@@ -89,13 +96,64 @@
                         <span>{background.background_name}</span>
                     {/each}
                 </h2>
-                <h2>ANCESTRY: ________________________________</h2>
+                <h2>
+                    {#if hasEditPermission}
+                        <Dialog.Root bind:open={ancestriesDialogOpen}>
+                            <Dialog.Trigger>
+                                {#snippet child({ props })}
+                                    <button class="h2lineup" {...props}>
+                                        <PencilEditIcon size="2.0rem" />
+                                    </button>
+                                {/snippet}
+                            </Dialog.Trigger>
+                            <NormalDialog title="Edit Ancestries">
+                                <EditCharAncestries action="?/saveAncestries" closeDialog={() => ancestriesDialogOpen = false} />
+                            </NormalDialog>
+                        </Dialog.Root>
+                        <BufferDot />
+                    {/if}
+                    <span>{ancestriesMapped.length > 1 ? "ANCESTRIES" : "ANCESTRY"}:</span>
+                    {#each ancestriesMapped as ancestry, index}
+                        {#if index !== 0}
+                            <span>, </span>
+                        {/if}
+                        <span>{ancestry.ancestry_name}</span>
+                    {/each}
+                </h2>
             </div>
             <RumorsBox {hasEditPermission} curId={cur.id} {backstories} />
             <footer>
-                <h2>LANGUAGES: ______________________________</h2>
+                <h2>
+                    {#if hasEditPermission}
+                        <Dialog.Root bind:open={languagesDialogOpen}>
+                            <Dialog.Trigger>
+                                {#snippet child({ props })}
+                                    <button class="h2lineup" {...props}>
+                                        <PencilEditIcon size="2.0rem" />
+                                    </button>
+                                {/snippet}
+                            </Dialog.Trigger>
+                            <NormalDialog title="Edit Languages">
+                                <EditCharLanguages action="?/saveLanguages" closeDialog={() => languagesDialogOpen = false} />
+                            </NormalDialog>
+                        </Dialog.Root>
+                        <BufferDot />
+                    {/if}
+                    <span>LANGUAGE{languagesMapped.length > 1 ? "S" : ""}:</span>
+                    {#each languagesMapped.sort((a, b) => a.language_name.localeCompare(b.language_name)) as language, index}
+                        {#if index !== 0}
+                            <span>, </span>
+                        {/if}
+                        <span>{language.language_name}</span>
+                    {/each}
+                </h2>
                 <div>
-                    <h2>SKILL POINTS:</h2> 
+                    <h2>
+                        SKILL POINTS:
+                        <span class="sp">{skillPointsSpent}</span>
+                        /
+                        <span class="sp">{skillPointsMax}</span>
+                    </h2>
                 </div>
             </footer>
         </header>
@@ -167,5 +225,8 @@
         position: relative;
         top: 0.4rem;
         height: 2.0rem;
+    }
+    span.sp {
+        margin: 0 1.0rem;
     }
 </style>

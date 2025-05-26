@@ -81,6 +81,33 @@ export const actions = {
         await supabase.from("backstories").delete().eq("id", backstoryId);
         return {};
     },
+    saveAncestries: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const characterId = formData.get("character_id");
+        if (!verifyEditPermission(supabase, getProfile, characterId)) {
+            return fail(403, { message: "Forbidden" }, { src: "saveAncestries" });
+        }
+
+        const ancestryIds = JSON.parse(formData.get("ancestries"))
+            .map((ancestry) => ancestry.id);
+        const insertData = ancestryIds.map((ancestryId) => ({
+            character: characterId,
+            ancestry: ancestryId,
+        }));
+
+        await supabase.from("character_ancestries")
+            .delete()
+            .eq("character", characterId);
+        
+        const { error } = await supabase.from("character_ancestries")
+            .insert(insertData);
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong." }, { src: "saveBackgrounds" });
+        }
+        
+        return {};
+    },
     saveBackgrounds: async ({ request, locals: { supabase, getProfile } }) => {
         const formData = await request.formData();
         const characterId = formData.get("character_id");
@@ -104,6 +131,33 @@ export const actions = {
         if (error) {
             console.error({ error });
             return fail(500, { message: error.message || "Something went wrong." }, { src: "saveBackgrounds" });
+        }
+        
+        return {};
+    },
+    saveLanguages: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const characterId = formData.get("character_id");
+        if (!verifyEditPermission(supabase, getProfile, characterId)) {
+            return fail(403, { message: "Forbidden" }, { src: "saveLanguages" });
+        }
+
+        const languagesIds = JSON.parse(formData.get("languages"))
+            .map((language) => language.id);
+        const insertData = languagesIds.map((languageId) => ({
+            character: characterId,
+            language: languageId,
+        }));
+
+        await supabase.from("character_languages")
+            .delete()
+            .eq("character", characterId);
+        
+        const { error } = await supabase.from("character_languages")
+            .insert(insertData);
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong." }, { src: "saveLanguages" });
         }
         
         return {};

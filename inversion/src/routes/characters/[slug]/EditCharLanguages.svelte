@@ -9,15 +9,15 @@
     import TrashIcon from "$lib/components/icons/TrashIcon.svelte";
 
     let { action, closeDialog } = $props();
-    let allBackgrounds = $state([]);
-    let backgrounds = $state(
-        $page.data.character.character_backgrounds.map((obj) => obj.backgrounds)
+    let allLanguages = $state([]);
+    let languages = $state(
+        $page.data.character.character_languages.map((obj) => obj.languages)
     );
-    let selectNewBackgroundOpen = $state(false);
+    let selectNewLanguageOpen = $state(false);
     onMount(async () => {
-        const jsonRes = await fetch("/api/v1/fetchChoices/backgrounds");
+        const jsonRes = await fetch("/api/v1/fetchChoices/languages");
         if (jsonRes.ok) {
-            allBackgrounds = await jsonRes.json();
+            allLanguages = await jsonRes.json();
         }
         loading = false;
     });
@@ -31,20 +31,20 @@
 
 <NormalForm method="post" {action} fct={() => handleSubmit(loading, cleanupSubmit)}>
     <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
-    <input type="hidden" name="backgrounds" id="backgrounds" value={JSON.stringify(backgrounds)} />
+    <input type="hidden" name="languages" id="languages" value={JSON.stringify(languages)} />
     <ul>
-        {#each backgrounds as background, index}
+        {#each languages as language, index}
             <li>
-                <button class="warning" type="button" onclick={() => backgrounds.splice(index, 1)}>
+                <button class="warning" type="button" onclick={() => languages.splice(index, 1)}>
                     <TrashIcon size="1.6rem" />
                 </button>
                 <BufferDot />
-                <span>{background.background_name}</span>
+                <span>{language.language_name}</span>
             </li>
         {/each}
         <li>
-            <span class="needsBufferSpace">Add Background:</span>
-            <DropdownMenu.Root bind:open={selectNewBackgroundOpen}>
+            <span class="needsBufferSpace">Add language:</span>
+            <DropdownMenu.Root bind:open={selectNewLanguageOpen}>
                 <DropdownMenu.Trigger>
                     {#snippet child({ props })}
                         <Button {...props}>
@@ -53,14 +53,14 @@
                     {/snippet}
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content>
-                    {#each allBackgrounds.filter((background) => !backgrounds.find((existingBackground) => existingBackground.id === background.id)) as background}
+                    {#each allLanguages.filter((language) => !languages.find((existinglanguage) => existinglanguage.id === language.id)) as language}
                         <DropdownMenu.Item>
                             {#snippet child({ props })}
                                 <div { ...props } onclick={() => {
-                                    backgrounds.push(background);
-                                    selectNewBackgroundOpen = false;
+                                    languages.push(language);
+                                    selectNewLanguageOpen = false;
                                 }}>
-                                    {background.background_name}
+                                    {language.language_name}
                                 </div>
                             {/snippet}
                         </DropdownMenu.Item>
