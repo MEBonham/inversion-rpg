@@ -1,11 +1,17 @@
 <script>
     import { goto } from "$app/navigation";
     import NormalPage from "$lib/components/NormalPage.svelte";
+	import { Dialog } from "bits-ui";
 	import RumorsBox from "./RumorsBox.svelte";
+	import BufferDot from "$lib/components/BufferDot.svelte";
+    import NormalDialog from "$lib/components/NormalDialog.svelte";
+	import PencilEditIcon from "$lib/components/icons/PencilEditIcon.svelte";
+	import EditCharBackgrounds from "./EditCharBackgrounds.svelte";
 
     let { data } = $props();
     let cur = $derived(data.character);
     let backstories = $derived(data.backstories);
+    let backgroundsMapped = $derived(cur.character_backgrounds.map((obj) => obj.backgrounds));
     let profile = $derived(data.profile);
 
     let passcodes = $derived.by(() => {
@@ -42,6 +48,13 @@
         initialLoad = false;
     });
 
+    let backgroundsDialogOpen = $state(false);
+    const closeBackgroundsDialog = () => backgroundsDialogOpen = false;
+    let ancestriesDialogOpen = $state(false);
+    const closeAncestriesDialog = () => ancestriesDialogOpen = false;
+    let languagesDialogOpen = $state(false);
+    const closeLanguagesDialog = () => languagesDialogOpen = false;
+
     let loading = $state(false);
 </script>
 
@@ -52,7 +65,30 @@
                 <span>{cur.character_level}</span>
             </aside>
             <div>
-                <h2>BACKGROUND(S): _________________________</h2>
+                <h2>
+                    {#if hasEditPermission}
+                        <Dialog.Root bind:open={backgroundsDialogOpen}>
+                            <Dialog.Trigger>
+                                {#snippet child({ props })}
+                                    <button class="h2lineup" {...props}>
+                                        <PencilEditIcon size="2.0rem" />
+                                    </button>
+                                {/snippet}
+                            </Dialog.Trigger>
+                            <NormalDialog title="Edit Backgrounds">
+                                <EditCharBackgrounds action="?/saveBackgrounds" closeDialog={() => backgroundsDialogOpen = false} />
+                            </NormalDialog>
+                        </Dialog.Root>
+                        <BufferDot />
+                    {/if}
+                    <span>BACKGROUND{cur.character_backgrounds.length > 1 ? "S" : ""}:</span>
+                    {#each backgroundsMapped as background, index}
+                        {#if index !== 0}
+                            <span>, </span>
+                        {/if}
+                        <span>{background.background_name}</span>
+                    {/each}
+                </h2>
                 <h2>ANCESTRY: ________________________________</h2>
             </div>
             <RumorsBox {hasEditPermission} curId={cur.id} {backstories} />
@@ -125,5 +161,11 @@
             margin: 0;
             font-size: 2.0rem;
         }
+    }
+
+    button.h2lineup {
+        position: relative;
+        top: 0.4rem;
+        height: 2.0rem;
     }
 </style>

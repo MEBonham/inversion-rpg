@@ -29,6 +29,8 @@
     let dbFriendlyTraits = $derived(JSON.stringify(
         traits.filter((trait) => trait.name || trait.value)
     ));
+    let selectedAncestryAbility = $state(null);
+    let ancestryAbilityMenuOpen = $state(false);
 
     let loading = $state(false);
     const cleanupSubmit = async () => {
@@ -38,18 +40,18 @@
 </script>
 
 <NormalForm method="post" {action} fct={() => handleSubmit(loading, cleanupSubmit)}>
-    <label for="name">
+    <label for="ancestry_name">
         <span>Ancestry Name:</span>
-        <input type="text" name="name" id="name" required />
+        <input type="text" name="ancestry_name" id="ancestry_name" required />
     </label>
     <label for="nativeLanguage">
         <span>Native Language:</span>
-        <input type="hidden" name="nativeLanguage" id="nativeLanguage" value={selectedNativeLanguage} />
+        <input type="hidden" name="native_language" id="native_language" value={selectedNativeLanguage} />
         <DropdownMenu.Root bind:open={languagesMenuOpen}>
             <DropdownMenu.Trigger>
                 {#snippet child({ props })}
                     <Button {...props}>
-                        {selectedNativeLanguage || "(None)"}
+                        {$page.data.languages.find((language) => language.id === selectedNativeLanguage)?.language_name || "(None)"}
                     </Button>
                 {/snippet}
             </DropdownMenu.Trigger>
@@ -71,6 +73,7 @@
             </DropdownMenu.Content>
         </DropdownMenu.Root>
     </label>
+    <input type="hidden" name="stamina" id="stamina" value={JSON.stringify(stamina)} />
     <label for="stamina">
         <span>Stamina:</span>
         <span>
@@ -140,6 +143,7 @@
                 </button>
             </h2>
         </header>
+        <input type="hidden" name="traits" id="traits" value={dbFriendlyTraits} />
         {#each traits as trait, index}
             <label for="traits">
                 <input class="name" type="text" bind:value={traits[index].name} />
@@ -149,8 +153,47 @@
     </section>
     <section id="ancestryAbilityEntry">
         <h2>Ancestry Ability</h2>
-
+        <input type="hidden" name="ancestry_ability" id="ancestry_ability" value={selectedAncestryAbility} />
+        <label for="ancestryAbility">
+            <span>Default Ancestry Ability:</span>
+            <DropdownMenu.Root bind:open={ancestryAbilityMenuOpen}>
+                <DropdownMenu.Trigger>
+                    {#snippet child({ props })}
+                        <Button {...props}>
+                            {$page.data.activeAbilities.find((ability) => ability.id === selectedAncestryAbility)?.ability_name || "(None)"}
+                        </Button>
+                    {/snippet}
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                    <DropdownMenu.Item>
+                        {#snippet child({ props })}
+                            <div {...props} onclick={() => {
+                                selectedAncestryAbility = null;
+                                ancestryAbilityMenuOpen = false;
+                            }}>(None)</div>
+                        {/snippet}
+                    </DropdownMenu.Item>
+                    {#each $page.data.activeAbilities as ability}
+                        <DropdownMenu.Item>
+                            {#snippet child({ props })}
+                                <div { ...props } onclick={() => {
+                                    selectedAncestryAbility = ability.id;
+                                    ancestryAbilityMenuOpen = false;
+                                }}>
+                                    {ability.ability_name}
+                                </div>
+                            {/snippet}
+                        </DropdownMenu.Item>
+                    {/each}
+                </DropdownMenu.Content>
+            </DropdownMenu.Root>
+        </label>
     </section>
+    <footer>
+        <Button type="submit" disabled={loading}>
+            {loading ? "Loading ..." : "Save"}
+        </Button>
+    </footer>
 </NormalForm>
 
 <style>

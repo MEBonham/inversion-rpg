@@ -22,7 +22,7 @@
     <input type="hidden" name="editingId" id="editingId" value={editingId} />
     <input type="hidden" name="isRumor" id="isRumor" value={isRumorChecked} />
     <input type="hidden" name="isTrueRumor" id="isTrueRumor" value={isTrueRumorChecked} />
-    <div>
+    <div class="checkboxRow">
         <Checkbox.Root id="isRumor" bind:checked={isRumorChecked}>
             {#snippet children({ checked })}
                 {#if checked}
@@ -34,7 +34,7 @@
         </Checkbox.Root>
         <Label.Root for="isRumor">Is Rumor?</Label.Root>
     </div>
-    <div>
+    <div class="checkboxRow">
         <Checkbox.Root id="isTrueRumor" bind:checked={isTrueRumorChecked} disabled={!isRumorChecked}>
             {#snippet children({ checked })}
                 {#if checked}
@@ -67,10 +67,3 @@
         </Button>
     </footer>
 </NormalForm>
-
-<style>
-    div {
-        display: flex;
-        align-items: center;
-    }
-</style>

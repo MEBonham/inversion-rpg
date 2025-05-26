@@ -29,7 +29,12 @@ export const load = async ({ locals: { supabase, getProfile } }) => {
     const { data: languages, error: languagesError } = await supabase.from("languages")
         .select("id, language_name");
 
+    // Load Active Abilities info
+    const { data: activeAbilities, error: activeAbilitiesError } = await supabase.from("active_abilities")
+        .select("id, ability_name");
+
     return {
+        activeAbilities,
         blogEntries: blogEntries.filter((entry) => entry.author_id === profile.id || profile.auth_num > ADMIN_AUTH),
         chapters: chapters.sort((a, b) => a.chapter_num - b.chapter_num),
         languages,
@@ -74,6 +79,48 @@ export const actions = {
             }
         }
         throw redirect(307, "/blog");
+    },
+    newActiveAbility: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const profile = await getProfile();
+        if (!profile || profile.auth_num < ADMIN_AUTH) {
+            throw error(403, "Forbidden");
+        }
+
+        const { error } = await supabase.from("active_abilities").insert({
+            ability_name: formData.get("ability_name"),
+            action_type: formData.get("action_type"),
+            uses_per_rest: parseInt(formData.get("uses_per_rest")),
+            anyones_turn: formData.get("anyones_turn") === "true",
+            description: JSON.parse(formData.get("description")),
+        });
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong." }, { src: "newActiveAbility" });
+        }
+        return {};
+    },
+    newAncestry: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const profile = await getProfile();
+        if (!profile || profile.auth_num < ADMIN_AUTH) {
+            throw error(403, "Forbidden");
+        }
+
+        const { error } = await supabase.from("ancestries").insert({
+            ancestry_name: formData.get("ancestry_name"),
+            native_language: formData.get("native_language"),
+            stamina: JSON.parse(formData.get("stamina")),
+            size: formData.get("size"),
+            speed: formData.get("speed"),
+            traits: JSON.parse(formData.get("traits")),
+            ancestry_ability: formData.get("ancestry_ability"),
+        });
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong." }, { src: "newAncestry" });
+        }
+        return {};
     },
     newBackground: async ({ request, locals: { supabase, getProfile } }) => {
         const formData = await request.formData();

@@ -67,11 +67,10 @@
             <ContextMenu.Portal to="#page">
                 <ContextMenu.Content>
                     <ContextMenu.Item>
-                        <!-- <Button onclick={() => {
-                            console.log(backstory.id);
-                            deleteBackstory(backstory.id)
-                        }}>Delete Rumor/Backstory</Button> -->
-                        <Button onclick={() => deleteBackstory()}>Delete Rumor/Backstory</Button>
+                        <Button
+                            onclick={() => deleteBackstory()}
+                            disabled={!hasEditPermission}
+                        >Delete Rumor/Backstory</Button>
                     </ContextMenu.Item>
                 </ContextMenu.Content>
             </ContextMenu.Portal>

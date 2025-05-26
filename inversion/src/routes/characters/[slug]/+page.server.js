@@ -3,8 +3,18 @@ import { verifyEditPermission } from "$lib/server/serverUtils";
 
 export const load = async ({ locals: { supabase }, params }) => {
     const { data: character, error: characterError } = await supabase.from("characters")
-        .select("*")
-        .eq("slug", params.slug)
+        .select(`
+            *,
+            character_backgrounds (
+                backgrounds (*)
+            ),
+            character_ancestries (
+                ancestries (*)
+            ),
+            character_languages (
+                languages (*)
+            )
+        `).eq("slug", params.slug)
         .single();
     if (characterError) {
         console.error({ characterError });
@@ -69,6 +79,33 @@ export const actions = {
         }
 
         await supabase.from("backstories").delete().eq("id", backstoryId);
+        return {};
+    },
+    saveBackgrounds: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const characterId = formData.get("character_id");
+        if (!verifyEditPermission(supabase, getProfile, characterId)) {
+            return fail(403, { message: "Forbidden" }, { src: "saveBackgrounds" });
+        }
+
+        const backgroundIds = JSON.parse(formData.get("backgrounds"))
+            .map((background) => background.id);
+        const insertData = backgroundIds.map((backgroundId) => ({
+            character: characterId,
+            background: backgroundId,
+        }));
+
+        await supabase.from("character_backgrounds")
+            .delete()
+            .eq("character", characterId);
+        
+        const { error } = await supabase.from("character_backgrounds")
+            .insert(insertData);
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong." }, { src: "saveBackgrounds" });
+        }
+        
         return {};
     },
 };

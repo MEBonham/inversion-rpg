@@ -3,6 +3,7 @@
     import Button from "$lib/components/Button.svelte";
     import BufferDot from "$lib/components/BufferDot.svelte";
     import NormalDialog from "$lib/components/NormalDialog.svelte";
+    import NewActiveAbilityForm from "./NewActiveAbilityForm.svelte";
     import NewAncestryForm from "./NewAncestryForm.svelte";
     import NewBackgroundForm from "./NewBackgroundForm.svelte";
     import NewLanguagesForm from "./NewLanguagesForm.svelte";
@@ -11,6 +12,7 @@
         languages: false,
         backgrounds: false,
         ancestries: false,
+        activeAbilities: false,
     });
     const closeDialog = (whichDialog) => dialogsOpen[whichDialog] = false;
 </script>
@@ -51,6 +53,17 @@
                 </Dialog.Trigger>
                 <NormalDialog title="New Ancestry">
                     <NewAncestryForm action="?/newAncestry" closeDialog={() => closeDialog("ancestries")} />
+                </NormalDialog>
+            </Dialog.Root>
+            <BufferDot />
+            <Dialog.Root bind:open={dialogsOpen.activeAbilities}>
+                <Dialog.Trigger>
+                    {#snippet child({ props })}
+                        <Button {...props}>Active Abilities</Button>
+                    {/snippet}
+                </Dialog.Trigger>
+                <NormalDialog title="New Active Ability">
+                    <NewActiveAbilityForm action="?/newActiveAbility" closeDialog={() => closeDialog("activeAbilities")} />
                 </NormalDialog>
             </Dialog.Root>
         </section>
