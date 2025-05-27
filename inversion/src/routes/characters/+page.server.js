@@ -74,6 +74,7 @@ export const actions = {
             character_name,
             slug: slugToUse,
             character_level: clamp(parseInt(formData.get("level")), MIN_CHARACTER_LEVEL, MAX_CHARACTER_LEVEL),
+            is_inheritor_of_best_wishes: formData.get("inheritorOfBestWishes") === "true",
         });
         if (creationError) {
             console.error({ creationError });

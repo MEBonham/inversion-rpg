@@ -1,15 +1,20 @@
 import { STATS_BY_LEVEL } from "./constants";
 
 export const calcSkillPoints = (character) => {
-    let total = 0;
+    let totalSkillPoints = 0;
 
-    total += 3 * Math.max(0, character.character_backgrounds.length - 1);
+    totalSkillPoints += 3 * Math.max(0, character.character_backgrounds.length - 1);
 
-    total += 5 * Math.max(0, character.character_ancestries.length - 1);
+    totalSkillPoints += 5 * Math.max(0, character.character_ancestries.length - 1);
 
-    total += 2 * Math.max(0, character.character_languages.length - 3);
+    const nativeLanguages = character.character_ancestries.map(
+        (ancestryObj) => ancestryObj.ancestries.native_language
+    );
+    const numDupedLanguages = nativeLanguages.filter((val, index, self) => self.indexOf(val) !== index).length;
+    let coveredLanguages = 2 * character.character_ancestries.length + 1 - numDupedLanguages;
+    totalSkillPoints += 2 * Math.max(0, character.character_languages.length - coveredLanguages);
 
-    return total;
+    return totalSkillPoints;
 }
 
 export const calcMaxSkillPoints = (character) => {
