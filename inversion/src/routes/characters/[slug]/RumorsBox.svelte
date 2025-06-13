@@ -83,6 +83,7 @@
         width: calc(50% - 5.0rem);
         min-width: 30rem;
         height: 100%;
+        min-height: 15.0rem;
         border: 1px solid var(--invertParchment);
         border-radius: 0.4rem;
         padding: 1.0rem 1.0rem 0.6rem;

@@ -2,6 +2,7 @@
     import { goto } from "$app/navigation";
     import NormalPage from "$lib/components/NormalPage.svelte";
 	import { Dialog } from "bits-ui";
+	import { BASE_SKILLS } from "$lib/constants";
 	import { calcSkillPoints, calcMaxSkillPoints } from "$lib/characterCalc";
 	import RumorsBox from "./RumorsBox.svelte";
 	import BufferDot from "$lib/components/BufferDot.svelte";
@@ -10,6 +11,9 @@
 	import EditCharBackgrounds from "./EditCharBackgrounds.svelte";
     import EditCharAncestries from "./EditCharAncestries.svelte";
     import EditCharLanguages from "./EditCharLanguages.svelte";
+    import NormalSkillsHeader from "./NormalSkillsHeader.svelte";
+    import NormalSkillWidget from "./NormalSkillWidget.svelte";
+	import CurrentStatsTracker from "./CurrentStatsTracker.svelte";
 
     let { data } = $props();
     let profile = $derived(data.profile);
@@ -20,6 +24,7 @@
     let backgroundsMapped = $derived(cur.character_backgrounds.map((obj) => obj.backgrounds));
     let ancestriesMapped = $derived(cur.character_ancestries.map((obj) => obj.ancestries));
     let languagesMapped = $derived(cur.character_languages.map((obj) => obj.languages));
+    let skillsMapped = $derived(cur.character_skills ?? BASE_SKILLS);
 
     let passcodes = $derived.by(() => {
         if (profile) {
@@ -71,57 +76,59 @@
             <aside>
                 <span>{cur.character_level}</span>
             </aside>
-            <div>
-                <h2>
-                    {#if hasEditPermission}
-                        <Dialog.Root bind:open={backgroundsDialogOpen}>
-                            <Dialog.Trigger>
-                                {#snippet child({ props })}
-                                    <button class="h2lineup" {...props}>
-                                        <PencilEditIcon size="2.0rem" />
-                                    </button>
-                                {/snippet}
-                            </Dialog.Trigger>
-                            <NormalDialog title="Edit Backgrounds">
-                                <EditCharBackgrounds action="?/saveBackgrounds" closeDialog={() => backgroundsDialogOpen = false} />
-                            </NormalDialog>
-                        </Dialog.Root>
-                        <BufferDot />
-                    {/if}
-                    <span>BACKGROUND{backgroundsMapped.length > 1 ? "S" : ""}:</span>
-                    {#each backgroundsMapped as background, index}
-                        {#if index !== 0}
-                            <span>, </span>
+            <main>
+                <div>
+                    <h2>
+                        {#if hasEditPermission}
+                            <Dialog.Root bind:open={backgroundsDialogOpen}>
+                                <Dialog.Trigger>
+                                    {#snippet child({ props })}
+                                        <button class="h2lineup" {...props}>
+                                            <PencilEditIcon size="2.0rem" />
+                                        </button>
+                                    {/snippet}
+                                </Dialog.Trigger>
+                                <NormalDialog title="Edit Backgrounds">
+                                    <EditCharBackgrounds action="?/saveBackgrounds" closeDialog={() => backgroundsDialogOpen = false} />
+                                </NormalDialog>
+                            </Dialog.Root>
+                            <BufferDot />
                         {/if}
-                        <span>{background.background_name}</span>
-                    {/each}
-                </h2>
-                <h2>
-                    {#if hasEditPermission}
-                        <Dialog.Root bind:open={ancestriesDialogOpen}>
-                            <Dialog.Trigger>
-                                {#snippet child({ props })}
-                                    <button class="h2lineup" {...props}>
-                                        <PencilEditIcon size="2.0rem" />
-                                    </button>
-                                {/snippet}
-                            </Dialog.Trigger>
-                            <NormalDialog title="Edit Ancestries">
-                                <EditCharAncestries action="?/saveAncestries" closeDialog={() => ancestriesDialogOpen = false} />
-                            </NormalDialog>
-                        </Dialog.Root>
-                        <BufferDot />
-                    {/if}
-                    <span>{ancestriesMapped.length > 1 ? "ANCESTRIES" : "ANCESTRY"}:</span>
-                    {#each ancestriesMapped as ancestry, index}
-                        {#if index !== 0}
-                            <span>, </span>
+                        <span>BACKGROUND{backgroundsMapped.length > 1 ? "S" : ""}:</span>
+                        {#each backgroundsMapped as background, index}
+                            {#if index !== 0}
+                                <span>, </span>
+                            {/if}
+                            <span>{background.background_name}</span>
+                        {/each}
+                    </h2>
+                    <h2>
+                        {#if hasEditPermission}
+                            <Dialog.Root bind:open={ancestriesDialogOpen}>
+                                <Dialog.Trigger>
+                                    {#snippet child({ props })}
+                                        <button class="h2lineup" {...props}>
+                                            <PencilEditIcon size="2.0rem" />
+                                        </button>
+                                    {/snippet}
+                                </Dialog.Trigger>
+                                <NormalDialog title="Edit Ancestries">
+                                    <EditCharAncestries action="?/saveAncestries" closeDialog={() => ancestriesDialogOpen = false} />
+                                </NormalDialog>
+                            </Dialog.Root>
+                            <BufferDot />
                         {/if}
-                        <span>{ancestry.ancestry_name}</span>
-                    {/each}
-                </h2>
-            </div>
-            <RumorsBox {hasEditPermission} curId={cur.id} {backstories} />
+                        <span>{ancestriesMapped.length > 1 ? "ANCESTRIES" : "ANCESTRY"}:</span>
+                        {#each ancestriesMapped as ancestry, index}
+                            {#if index !== 0}
+                                <span>, </span>
+                            {/if}
+                            <span>{ancestry.ancestry_name}</span>
+                        {/each}
+                    </h2>
+                </div>
+                <RumorsBox {hasEditPermission} curId={cur.id} {backstories} />
+            </main>
             <footer>
                 <h2>
                     {#if hasEditPermission}
@@ -157,6 +164,39 @@
                 </div>
             </footer>
         </header>
+        <main id="pg1main">
+            <div id="pg1mainMisc">
+                <header>
+                    <CurrentStatsTracker />
+                    <section id="combatSkills">
+                        <NormalSkillsHeader />
+                        {#each skillsMapped.filter((skill) => skill.category === "Combat" && skill.regular) as skill}
+                            <NormalSkillWidget {skill} {hasEditPermission} />
+                        {/each}
+                    </section>
+                </header>
+            </div>
+            <aside id="skillsCol">
+                <section id="socialSkills">
+                    <NormalSkillsHeader />
+                    {#each skillsMapped.filter((skill) => skill.category === "Social") as skill}
+                        <NormalSkillWidget {skill} {hasEditPermission} />
+                    {/each}
+                </section>
+                <section id="knowledgeSkills">
+                    <NormalSkillsHeader />
+                    {#each skillsMapped.filter((skill) => skill.category === "Knowledge") as skill}
+                        <NormalSkillWidget {skill} {hasEditPermission} />
+                    {/each}
+                </section>
+                <section id="actionSkills">
+                    <NormalSkillsHeader />
+                    {#each skillsMapped.filter((skill) => skill.category === "Action") as skill}
+                        <NormalSkillWidget {skill} {hasEditPermission} />
+                    {/each}
+                </section>
+            </aside>
+        </main>
     {/if}
 </NormalPage>
 
@@ -167,9 +207,7 @@
         padding-right: 9.0rem;
         width: 100%;
         display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 1.0rem;
+        flex-direction: column;
 
         & > aside {
             position: absolute;
@@ -191,15 +229,21 @@
                 font-size: 3.8rem;
             }
         }
-        & > div {
-            flex-grow: 1;
-            min-width: 30rem;
-            height: 100%;
-            padding: 1.0rem 3.0rem;
+        & > main {
+            width: 100%;
             display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
-            gap: 0.6rem;
+            gap: 1.0rem;
+
+            & > div {
+                flex-grow: 1;
+                min-width: 30rem;
+                height: 100%;
+                padding: 1.0rem 3.0rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                gap: 0.6rem;
+            }
         }
         & > footer {
             width: 100%;
@@ -218,6 +262,42 @@
         & :global(h2) {
             margin: 0;
             font-size: 2.0rem;
+        }
+    }
+
+    #pg1main {
+        margin-top: 3.0rem;
+        display: flex;
+        gap: 1.0rem;
+
+        & #pg1mainMisc {
+            flex-grow: 3.5;
+
+            & > header {
+                display: flex;
+                gap: 1.0rem;
+
+                & #combatSkills {
+                    min-width: 40.0rem;
+                    flex-grow: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.6rem;
+                }
+            }
+        }
+        & #skillsCol {
+            min-width: 40.0rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3.4rem;
+
+            & section {
+                display: flex;
+                flex-direction: column;
+                gap: 1.6rem;
+            }
         }
     }
 

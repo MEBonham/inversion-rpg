@@ -1,5 +1,6 @@
 import { fail } from "@sveltejs/kit";
 import { verifyEditPermission } from "$lib/server/serverUtils";
+import { BASE_SKILLS } from "$lib/constants";
 
 export const load = async ({ locals: { supabase }, params }) => {
     const { data: character, error: characterError } = await supabase.from("characters")
@@ -135,6 +136,23 @@ export const actions = {
         
         return {};
     },
+    saveColumn: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const characterId = formData.get("character_id");
+        if (!verifyEditPermission(supabase, getProfile, characterId)) {
+            return fail(403, { message: "Forbidden" }, { src: "saveColumn" });
+        }
+
+        const { error: updateError } = await supabase.from("characters")
+            .update({ [formData.get("whichColumn")]: parseInt(formData.get("value")) })
+            .eq("id", characterId);
+        if (updateError) {
+            console.error({ updateError });
+            return fail(500, { message: updateError.message || "Something went wrong." }, { src: "saveColumn" });
+        }
+        
+        return {};
+    },
     saveLanguages: async ({ request, locals: { supabase, getProfile } }) => {
         const formData = await request.formData();
         const characterId = formData.get("character_id");
@@ -158,6 +176,38 @@ export const actions = {
         if (error) {
             console.error({ error });
             return fail(500, { message: error.message || "Something went wrong." }, { src: "saveLanguages" });
+        }
+        
+        return {};
+    },
+    saveSkill: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const characterId = formData.get("character_id");
+        if (!verifyEditPermission(supabase, getProfile, characterId)) {
+            return fail(403, { message: "Forbidden" }, { src: "saveLanguages" });
+        }
+
+        const { data: prevCharacter, error: prevCharacterError } = await supabase.from("characters")
+            .select("character_skills")
+            .eq("id", characterId)
+            .single();
+        if (prevCharacterError) {
+            console.error({ prevCharacterError });
+            return fail(500, { message: prevCharacterError.message || "Something went wrong." }, { src: "saveSkill" });
+        }
+
+        let skills = prevCharacter.character_skills ?? BASE_SKILLS;
+        const i = skills.findIndex((skill) => skill.skillName === formData.get("skillName"));
+        if (i === -1) {
+            return fail(500, { message: "Something went wrong." }, { src: "saveSkill" });
+        }
+        skills[i].rank = parseInt(formData.get("newRank"));
+        const { error: updateError } = await supabase.from("characters")
+            .update({ character_skills: skills })
+            .eq("id", characterId);
+        if (updateError) {
+            console.error({ updateError });
+            return fail(500, { message: updateError.message || "Something went wrong." }, { src: "saveSkill" });
         }
         
         return {};

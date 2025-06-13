@@ -22,6 +22,28 @@ form.normal button[data-checkbox-root][disabled] {
     opacity: 0.3;
 }
 
+/* CONTEXT MENU */
+div[data-context-menu-content] {
+    z-index: 10;
+    background-color: var(--parchment);
+    color: var(--invertParchment);
+    border-radius: 0.6rem;
+    box-shadow: 0 0 0.6rem var(--invertParchment);
+    padding: 0.2rem 0;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    
+    & div[data-context-menu-item] {
+        padding: 0.2rem 0.6rem;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--lightTorquoise);
+        }
+    }
+}
+
 /* DIALOG */
 div[data-dialog-overlay] {
     position: fixed;
@@ -113,6 +135,41 @@ div[data-scroll-area-viewport] {
 div[data-scroll-area-viewport].pageViewport > div[data-scroll-area-content] {
     display: flex;
     flex-direction: column;
+}
+
+/* SLIDER */
+span[data-slider-root] {
+    position: relative;
+    height: 1.6rem;
+    max-width: 350px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+
+    & span.bar {
+        width: 100%;
+        height: 0.4rem;
+        background-color: var(--lightTorquoise);
+        border-radius: 0.2rem;
+    }
+    & > span:last-child {
+        z-index: 10;
+        width: 1.2rem;
+        height: 1.2rem;
+        background-color: var(--lightTorquoise);
+        border-radius: 50%;
+        box-shadow: 0 0 0.5rem var(--invertParchment);
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--boldTorquoise);
+        }
+    }
+}
+span[data-slider-range] {
+    height: 0.4rem;
+    background-color: var(--popColor);
+    border-radius: 0.2rem;
 }
 
 /* TABS */
