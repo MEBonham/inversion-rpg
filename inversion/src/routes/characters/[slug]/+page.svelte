@@ -62,12 +62,6 @@
         initialLoad = false;
     });
     
-    // let backgroundsDialogIsOpen = $state(false);
-    // const closeBackgroundsDialog = () => backgroundsDialogOpen = false;
-    // let ancestriesDialogOpen = $state(false);
-    // const closeAncestriesDialog = () => ancestriesDialogOpen = false;
-    // let languagesDialogOpen = $state(false);
-    // const closeLanguagesDialog = () => languagesDialogOpen = false;
     let dialogIsOpen = $state(false);
     const closeDialog = () => dialogIsOpen = false;
     let whichDialog = $state(null);
@@ -97,22 +91,22 @@
                         <H2withContextEditMenu
                             mappedSelections={backgroundsMapped}
                             {hasEditPermission}
-                            singularTitle="BACKGROUND"
-                            pluralTitle="BACKGROUNDS"
+                            singularTitle="Background"
+                            pluralTitle="Backgrounds"
                             focusFct={() => whichDialog = "backgrounds"}
                         />
                         <H2withContextEditMenu
                             mappedSelections={ancestriesMapped}
                             {hasEditPermission}
-                            singularTitle="ANCESTRY"
-                            pluralTitle="ANCESTRIES"
+                            singularTitle="Ancestry"
+                            pluralTitle="Ancestries"
                             focusFct={() => whichDialog = "ancestries"}
                         />
                         <H2withContextEditMenu
                             mappedSelections={languagesMapped}
                             {hasEditPermission}
-                            singularTitle="LANGUAGE"
-                            pluralTitle="LANGUAGES"
+                            singularTitle="Language"
+                            pluralTitle="Languages"
                             focusFct={() => whichDialog = "languages"}
                         />
                     </div>
@@ -297,7 +291,7 @@
         & > main {
             width: 100%;
             display: flex;
-            gap: 1.0rem;
+            gap: 1.6rem;
 
             & > div.colOf2 {
                 flex-grow: 1;
@@ -305,26 +299,18 @@
                 padding: 1.0rem 0;
                 display: flex;
                 flex-direction: column;
-                gap: 0.6rem;
+                gap: 1.2rem;
 
                 &.col1 {
                     justify-content: space-between;
                 }
+                & footer {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                }
             }
-        }
-        & > footer {
-            width: 100%;
-            padding: 1.0rem 3.0rem;
-            display: flex;
-            gap: 1.0rem;
-
-            & h2 {
-                flex-grow: 2.5;
-            }
-            & div {
-                flex-grow: 1;
-            }
-        }
+        } 
 
         & :global(h2) {
             margin: 0;
@@ -367,12 +353,7 @@
             }
         }
     }
-
-    button.h2lineup {
-        position: relative;
-        top: 0.4rem;
-        height: 2.0rem;
-    }
+    
     span.sp {
         margin: 0 1.0rem;
     }
