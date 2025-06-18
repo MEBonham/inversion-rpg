@@ -36,9 +36,20 @@
     let dialogIsOpen = $state(false);
     const dialogTitles = {
         normalSpeed: "Normal Speed",
-        currentSpeed: "Current Speed"
+        currentSpeed: "Current Speed",
+        maxStamina: "Max Stamina",
+        currentStamina: "Current Stamina",
+        damage: "Take Damage",
+        healing: "Receive Healing"
     };
     let selectedStatValue = $state(null);
+    let postDamageStamina = $derived(Math.max(0,
+        currentStamina - (selectedStatValue || 0)
+    ));
+    let postHealingStamina = $derived(Math.min(
+        currentStamina + (selectedStatValue || 0),
+        stamina
+    ));
 
     let loading = $state(false);
     const cleanupSubmit = async () => {
@@ -80,17 +91,49 @@
                 </ContextMenu.Content>
             </ContextMenu.Portal>
         </ContextMenu.Root>
-        <article>
-            <div>
-                <img src="/charSheet/Stamina Icon.png" alt="Stamina Icon">
-                <span>STA</span>
-                {stamina}
-            </div>
-            <div>
-                <span>CURRENT:</span>
-                {currentStamina}
-            </div>
-        </article>
+        <ContextMenu.Root>
+            <ContextMenu.Trigger>
+                {#snippet child({ props })} 
+                    <article {...props}>
+                        <div>
+                            <img src="/charSheet/Stamina Icon.png" alt="Stamina Icon">
+                            <span>STA</span>
+                            {stamina}
+                        </div>
+                        <div>
+                            <span>CURRENT:</span>
+                            {currentStamina}
+                        </div>
+                    </article>
+                {/snippet}
+            </ContextMenu.Trigger>
+            <ContextMenu.Portal to="#page" class="myContextMenu">
+                <ContextMenu.Content>
+                    <ContextMenu.Item>
+                        <Dialog.Trigger onclick={() => whichDialog = "maxStamina"}>
+                            Set Max Stamina
+                        </Dialog.Trigger>
+                    </ContextMenu.Item>
+                    <ContextMenu.Item>
+                        <Dialog.Trigger onclick={() => whichDialog = "currentStamina"}>
+                            Set Current Stamina
+                        </Dialog.Trigger>
+                    </ContextMenu.Item>
+                    <ContextMenu.Item>
+                        <Dialog.Trigger onclick={() => whichDialog = "damage"}>
+                            Take Damage
+                        </Dialog.Trigger>
+                    </ContextMenu.Item>
+                    <ContextMenu.Item>
+                        <Dialog.Trigger onclick={() => whichDialog = "healing"}>
+                            Receive Healing
+                        </Dialog.Trigger>
+                    </ContextMenu.Item>
+                </ContextMenu.Content>
+            </ContextMenu.Portal>
+        </ContextMenu.Root>
+        <!-- <article>
+        </article> -->
         <article>
             <div>
                 <img src="/charSheet/Dodge Icon.png" alt="Dodge Icon">
@@ -159,6 +202,56 @@
                 <label for="current_speed">
                     <span>Current Speed:</span>
                     <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
+                </label>
+                <footer>
+                    <Button type="submit" disabled={loading}>Save</Button>
+                </footer>
+            </NormalForm>
+        {:else if whichDialog === "maxStamina"}
+            <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+                <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
+                <input type="hidden" name="whichColumn" id="whichColumn" value="stamina" />
+                <label for="stamina">
+                    <span>Max Stamina:</span>
+                    <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
+                </label>
+                <footer>
+                    <Button type="submit" disabled={loading}>Save</Button>
+                </footer>
+            </NormalForm>
+        {:else if whichDialog === "currentStamina"}
+            <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+                <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
+                <input type="hidden" name="whichColumn" id="whichColumn" value="current_stamina" />
+                <label for="current_stamina">
+                    <span>Current Stamina:</span>
+                    <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
+                </label>
+                <footer>
+                    <Button type="submit" disabled={loading}>Save</Button>
+                </footer>
+            </NormalForm>
+        {:else if whichDialog === "damage"}
+            <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+                <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
+                <input type="hidden" name="whichColumn" id="whichColumn" value="current_stamina" />
+                <input type="hidden" name="value" id="value" value={postDamageStamina} />
+                <label for="damageQty">
+                    <span>Damage:</span>
+                    <input type="number" name="damageQty" id="damageQty" bind:value={selectedStatValue} required />
+                </label>
+                <footer>
+                    <Button type="submit" disabled={loading}>Save</Button>
+                </footer>
+            </NormalForm>
+        {:else if whichDialog === "healing"}
+            <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+                <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
+                <input type="hidden" name="whichColumn" id="whichColumn" value="current_stamina" />
+                <input type="hidden" name="value" id="value" value={postHealingStamina} />
+                <label for="healingQty">
+                    <span>Healing:</span>
+                    <input type="number" name="healingQty" id="healingQty" bind:value={selectedStatValue} required />
                 </label>
                 <footer>
                     <Button type="submit" disabled={loading}>Save</Button>

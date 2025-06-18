@@ -67,10 +67,10 @@
             <ContextMenu.Portal to="#page">
                 <ContextMenu.Content>
                     <ContextMenu.Item>
-                        <Button
+                        <button
                             onclick={() => deleteBackstory()}
                             disabled={!hasEditPermission}
-                        >Delete Rumor/Backstory</Button>
+                        >Delete Rumor/Backstory</button>
                     </ContextMenu.Item>
                 </ContextMenu.Content>
             </ContextMenu.Portal>
@@ -80,7 +80,7 @@
 
 <style>
     article.rumorsBox {
-        width: calc(50% - 5.0rem);
+        width: 100%;
         min-width: 30rem;
         height: 100%;
         min-height: 15.0rem;

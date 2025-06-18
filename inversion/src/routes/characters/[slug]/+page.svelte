@@ -3,7 +3,9 @@
     import NormalPage from "$lib/components/NormalPage.svelte";
 	import { Dialog } from "bits-ui";
 	import { BASE_SKILLS } from "$lib/constants";
+    import { sleep } from "$lib/utils";
 	import { calcSkillPoints, calcMaxSkillPoints } from "$lib/characterCalc";
+    import H2withContextEditMenu from "./H2withContextEditMenu.svelte";
 	import RumorsBox from "./RumorsBox.svelte";
 	import BufferDot from "$lib/components/BufferDot.svelte";
     import NormalDialog from "$lib/components/NormalDialog.svelte";
@@ -21,9 +23,9 @@
     let skillPointsSpent = $derived(calcSkillPoints(cur));
     let skillPointsMax = $derived(calcMaxSkillPoints(cur));
     let backstories = $derived(data.backstories);
-    let backgroundsMapped = $derived(cur.character_backgrounds.map((obj) => obj.backgrounds));
-    let ancestriesMapped = $derived(cur.character_ancestries.map((obj) => obj.ancestries));
-    let languagesMapped = $derived(cur.character_languages.map((obj) => obj.languages));
+    let backgroundsMapped = $derived(cur.character_backgrounds.map((obj) => obj.backgrounds.background_name));
+    let ancestriesMapped = $derived(cur.character_ancestries.map((obj) => obj.ancestries.ancestry_name));
+    let languagesMapped = $derived(cur.character_languages.map((obj) => obj.languages.language_name));
     let skillsMapped = $derived(cur.character_skills ?? BASE_SKILLS);
 
     let passcodes = $derived.by(() => {
@@ -59,52 +61,120 @@
         }
         initialLoad = false;
     });
-
-    let backgroundsDialogOpen = $state(false);
-    const closeBackgroundsDialog = () => backgroundsDialogOpen = false;
-    let ancestriesDialogOpen = $state(false);
-    const closeAncestriesDialog = () => ancestriesDialogOpen = false;
-    let languagesDialogOpen = $state(false);
-    const closeLanguagesDialog = () => languagesDialogOpen = false;
+    
+    // let backgroundsDialogIsOpen = $state(false);
+    // const closeBackgroundsDialog = () => backgroundsDialogOpen = false;
+    // let ancestriesDialogOpen = $state(false);
+    // const closeAncestriesDialog = () => ancestriesDialogOpen = false;
+    // let languagesDialogOpen = $state(false);
+    // const closeLanguagesDialog = () => languagesDialogOpen = false;
+    let dialogIsOpen = $state(false);
+    const closeDialog = () => dialogIsOpen = false;
+    let whichDialog = $state(null);
+    let dialogTitles = {
+        backgrounds: "Edit Backgrounds",
+        ancestries: "Edit Ancestries",
+        languages: "Edit Languages",
+    };
 
     let loading = $state(false);
+    const cleanupSubmit = async () => {
+        await sleep(0.1);
+        closeDialog();
+    }
 </script>
 
 <NormalPage title={initialLoad ? "Loading ..." : cur.character_name}>
     {#if !initialLoad}
-        <header id="sheetHeader">
-            <aside>
-                <span>{cur.character_level}</span>
-            </aside>
+        <Dialog.Root bind:open={dialogIsOpen}>
+            <header id="sheetHeader">
+                <aside>
+                    <span>{cur.character_level}</span>
+                </aside>
+                <main>
+                    <div class="colOf2 col1">
+                        <div></div>
+                        <H2withContextEditMenu
+                            mappedSelections={backgroundsMapped}
+                            {hasEditPermission}
+                            singularTitle="BACKGROUND"
+                            pluralTitle="BACKGROUNDS"
+                            focusFct={() => whichDialog = "backgrounds"}
+                        />
+                        <H2withContextEditMenu
+                            mappedSelections={ancestriesMapped}
+                            {hasEditPermission}
+                            singularTitle="ANCESTRY"
+                            pluralTitle="ANCESTRIES"
+                            focusFct={() => whichDialog = "ancestries"}
+                        />
+                        <H2withContextEditMenu
+                            mappedSelections={languagesMapped}
+                            {hasEditPermission}
+                            singularTitle="LANGUAGE"
+                            pluralTitle="LANGUAGES"
+                            focusFct={() => whichDialog = "languages"}
+                        />
+                    </div>
+                    <div class="colOf2">
+                        <RumorsBox {hasEditPermission} curId={cur.id} {backstories} />
+                        <footer>
+                            <h2>
+                                SKILL POINTS:
+                                <span class="sp">{skillPointsSpent}</span>
+                                /
+                                <span class="sp">{skillPointsMax}</span>
+                            </h2>
+                        </footer>
+                    </div>
+                </main>
+            </header>
+            <NormalDialog title={dialogTitles[whichDialog]}>
+                {#if whichDialog === "backgrounds"}
+                    <EditCharBackgrounds action="?/saveBackgrounds" closeDialog={() => closeDialog()} />
+                {:else if whichDialog === "ancestries"}
+                    <EditCharAncestries action="?/saveAncestries" closeDialog={() => closeDialog()} />
+                {:else if whichDialog === "languages"}
+                    <EditCharLanguages action="?/saveLanguages" closeDialog={() => closeDialog()} />
+                {/if}
+            </NormalDialog>
+        </Dialog.Root>
+        <!-- <header id="sheetHeader">
             <main>
                 <div>
-                    <h2>
+                    <ContextMenu.Root>
+                        <ContextMenu.Trigger>
+                            {#snippet child({ props })}
+                                <h2 {...props}>
+                                    <span>BACKGROUND{backgroundsMapped.length > 1 ? "S" : ""}:</span>
+                                    {#each backgroundsMapped as background, index}
+                                        {#if index !== 0}
+                                            <span>, </span>
+                                        {/if}
+                                        <span>{background.background_name}</span>
+                                    {/each}
+                                </h2>
+                            {/snippet}
+                        </ContextMenu.Trigger>
                         {#if hasEditPermission}
-                            <Dialog.Root bind:open={backgroundsDialogOpen}>
-                                <Dialog.Trigger>
+                            <Dialog.Root bind:open={backgroundsDialogIsOpen}>
+                                <ContextMenu.Trigger>
                                     {#snippet child({ props })}
-                                        <button class="h2lineup" {...props}>
-                                            <PencilEditIcon size="2.0rem" />
-                                        </button>
+                                        <Dialog.Trigger>
+                                            {#snippet child({ props2 })}
+                                                <button {...{ ...props, ...props2 }}>
+                                                    Edit Backgrounds
+                                                </button>
+                                            {/snippet}
+                                        </Dialog.Trigger>
                                     {/snippet}
-                                </Dialog.Trigger>
-                                <NormalDialog title="Edit Backgrounds">
-                                    <EditCharBackgrounds action="?/saveBackgrounds" closeDialog={() => backgroundsDialogOpen = false} />
-                                </NormalDialog>
+                                </ContextMenu.Trigger>
                             </Dialog.Root>
                             <BufferDot />
                         {/if}
-                        <span>BACKGROUND{backgroundsMapped.length > 1 ? "S" : ""}:</span>
-                        {#each backgroundsMapped as background, index}
-                            {#if index !== 0}
-                                <span>, </span>
-                            {/if}
-                            <span>{background.background_name}</span>
-                        {/each}
-                    </h2>
                     <h2>
                         {#if hasEditPermission}
-                            <Dialog.Root bind:open={ancestriesDialogOpen}>
+                            <Dialog.Root bind:open={ancestriesDialogIsOpen}>
                                 <Dialog.Trigger>
                                     {#snippet child({ props })}
                                         <button class="h2lineup" {...props}>
@@ -113,7 +183,7 @@
                                     {/snippet}
                                 </Dialog.Trigger>
                                 <NormalDialog title="Edit Ancestries">
-                                    <EditCharAncestries action="?/saveAncestries" closeDialog={() => ancestriesDialogOpen = false} />
+                                    <EditCharAncestries action="?/saveAncestries" closeDialog={() => ancestriesDialogIsOpen = false} />
                                 </NormalDialog>
                             </Dialog.Root>
                             <BufferDot />
@@ -132,7 +202,7 @@
             <footer>
                 <h2>
                     {#if hasEditPermission}
-                        <Dialog.Root bind:open={languagesDialogOpen}>
+                        <Dialog.Root bind:open={languagesDialogIsOpen}>
                             <Dialog.Trigger>
                                 {#snippet child({ props })}
                                     <button class="h2lineup" {...props}>
@@ -141,7 +211,7 @@
                                 {/snippet}
                             </Dialog.Trigger>
                             <NormalDialog title="Edit Languages">
-                                <EditCharLanguages action="?/saveLanguages" closeDialog={() => languagesDialogOpen = false} />
+                                <EditCharLanguages action="?/saveLanguages" closeDialog={() => languagesDialogIsOpen = false} />
                             </NormalDialog>
                         </Dialog.Root>
                         <BufferDot />
@@ -155,15 +225,9 @@
                     {/each}
                 </h2>
                 <div>
-                    <h2>
-                        SKILL POINTS:
-                        <span class="sp">{skillPointsSpent}</span>
-                        /
-                        <span class="sp">{skillPointsMax}</span>
-                    </h2>
                 </div>
             </footer>
-        </header>
+        </header> -->
         <main id="pg1main">
             <div id="pg1mainMisc">
                 <header>
@@ -204,6 +268,7 @@
     #sheetHeader {
         position: relative;
         margin: 1.0rem 0;
+        padding-left: 3.0rem;
         padding-right: 9.0rem;
         width: 100%;
         display: flex;
@@ -234,15 +299,17 @@
             display: flex;
             gap: 1.0rem;
 
-            & > div {
+            & > div.colOf2 {
                 flex-grow: 1;
                 min-width: 30rem;
-                height: 100%;
-                padding: 1.0rem 3.0rem;
+                padding: 1.0rem 0;
                 display: flex;
                 flex-direction: column;
-                justify-content: space-evenly;
                 gap: 0.6rem;
+
+                &.col1 {
+                    justify-content: space-between;
+                }
             }
         }
         & > footer {
