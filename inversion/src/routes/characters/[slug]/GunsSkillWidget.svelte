@@ -142,6 +142,8 @@
         align-items: center;
         
         & .label {
+            position: relative;
+            top: -0.2rem;
             width: calc(30% - 0.3rem);
             height: 100%;
             font-size: 1.4rem;
