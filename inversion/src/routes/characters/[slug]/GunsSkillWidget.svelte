@@ -49,7 +49,7 @@
                     <div class="body">
                         {#each range as type}
                             <div>
-                                <span>{type}</span>
+                                <span class:rank5icon={type === "5"}>{type !== "5" ? type : ""}</span>
                                 <div class="bubble" class:filled={skill.rank[rangeMeanings[type]]}></div>
                             </div>
                         {/each}
@@ -157,6 +157,16 @@
             & > div {
                 display: flex;
                 flex-direction: column;
+                align-items: center;
+
+                &:last-child {
+                    justify-content: flex-end;
+
+                    & span.rank5icon {
+                        position: relative;
+                        top: -0.4rem;
+                    }
+                }
             }
 
             & div.bubble {
@@ -172,7 +182,8 @@
         }
     }
 
-    div.rank5icon {
+    div.rank5icon,
+    span.rank5icon {
         width: 1.6rem;
         height: 1.6rem;
         background-size: contain;
