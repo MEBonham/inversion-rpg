@@ -40,7 +40,11 @@
         maxStamina: "Max Stamina",
         currentStamina: "Current Stamina",
         damage: "Take Damage",
-        healing: "Receive Healing"
+        healing: "Receive Healing",
+        baseDodge: "Base Dodge",
+        currentDodge: "Current Dodge",
+        baseArmor: "Base Armor",
+        currentArmor: "Current Armor",
     };
     let selectedStatValue = $state(null);
     let postDamageStamina = $derived(Math.max(0,
@@ -80,7 +84,7 @@
                 <ContextMenu.Content>
                     <ContextMenu.Item>
                         <Dialog.Trigger onclick={() => whichDialog = "normalSpeed"}>
-                            Select Normal Speed
+                            Set Normal Speed
                         </Dialog.Trigger>
                     </ContextMenu.Item>
                     <ContextMenu.Item>
@@ -132,107 +136,100 @@
                 </ContextMenu.Content>
             </ContextMenu.Portal>
         </ContextMenu.Root>
-        <!-- <article>
-        </article> -->
-        <article>
-            <div>
-                <img src="/charSheet/Dodge Icon.png" alt="Dodge Icon">
-                <span>DO</span>
-                {dodge}
-            </div>
-            <div>
-                <span>CURRENT:</span>
-                {currentDodge}
-            </div>
-        </article>
-        <article>
-            <div>
-                <img src="/charSheet/Armor Icon.png" alt="Armor Icon">
-                <span>AR</span>
-                {armor}
-            </div>
-            <div>
-                <span>CURRENT:</span>
-                {currentArmor}
-            </div>
-        </article>
+        <ContextMenu.Root>
+            <ContextMenu.Trigger>
+                {#snippet child({ props })} 
+                    <article {...props}>
+                        <div>
+                            <img src="/charSheet/Dodge Icon.png" alt="Dodge Icon">
+                            <span>DO</span>
+                            {dodge}
+                        </div>
+                        <div>
+                            <span>CURRENT:</span>
+                            {currentDodge}
+                        </div>
+                    </article>
+                {/snippet}
+            </ContextMenu.Trigger>
+            <ContextMenu.Portal to="#page" class="myContextMenu">
+                <ContextMenu.Content>
+                    <ContextMenu.Item>
+                        <Dialog.Trigger onclick={() => whichDialog = "baseDodge"}>
+                            Set Base Dodge
+                        </Dialog.Trigger>
+                    </ContextMenu.Item>
+                    <ContextMenu.Item>
+                        <Dialog.Trigger onclick={() => whichDialog = "currentDodge"}>
+                            Set Current Dodge
+                        </Dialog.Trigger>
+                    </ContextMenu.Item>
+                </ContextMenu.Content>
+            </ContextMenu.Portal>
+        </ContextMenu.Root>
+        <ContextMenu.Root>
+            <ContextMenu.Trigger>
+                {#snippet child({ props })} 
+                    <article {...props}>
+                        <div>
+                            <img src="/charSheet/Armor Icon.png" alt="Armor Icon">
+                            <span>AR</span>
+                            {armor}
+                        </div>
+                        <div>
+                            <span>CURRENT:</span>
+                            {currentArmor}
+                        </div>
+                    </article>
+                {/snippet}
+            </ContextMenu.Trigger>
+            <ContextMenu.Portal to="#page" class="myContextMenu">
+                <ContextMenu.Content>
+                    <ContextMenu.Item>
+                        <Dialog.Trigger onclick={() => whichDialog = "baseArmor"}>
+                            Set Base Armor
+                        </Dialog.Trigger>
+                    </ContextMenu.Item>
+                    <ContextMenu.Item>
+                        <Dialog.Trigger onclick={() => whichDialog = "currentArmor"}>
+                            Set Current Armor
+                        </Dialog.Trigger>
+                    </ContextMenu.Item>
+                </ContextMenu.Content>
+            </ContextMenu.Portal>
+        </ContextMenu.Root>
     </div>
     <NormalDialog title={dialogTitles[whichDialog]}>
-        {#if whichDialog === "normalSpeed"}
-            <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+        <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+            {#if whichDialog === "normalSpeed"}
                 <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
                 <input type="hidden" name="whichColumn" id="whichColumn" value="speed" />
-                <input type="hidden" name="value" id="value" value={selectedStatValue} />
-                Selected Speed: {selectedStatValue || "none"}
-                <DropdownMenu.Root>
-                    <DropdownMenu.Trigger>
-                        {#snippet child({ props })}
-                            <Button {...props}>
-                                Select Speed
-                            </Button>
-                        {/snippet}
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Content>
-                        {#if $page.data.character.character_ancestries.length > 0}
-                            {#each $page.data.character.character_ancestries as ancestry}
-                                <DropdownMenu.Item>
-                                    {#snippet child({ props })}
-                                        <button {...props} onclick={() => selectedStatValue = ancestry.ancestries.speed} type="button">
-                                            {ancestry.ancestries.ancestry_name}:
-                                            {ancestry.ancestries.speed}
-                                        </button>
-                                    {/snippet}
-                                </DropdownMenu.Item>
-                            {/each}
-                        {:else}
-                            <DropdownMenu.Item>
-                                4
-                            </DropdownMenu.Item>
-                        {/if}
-                    </DropdownMenu.Content>
-                </DropdownMenu.Root>
-                <footer>
-                    <Button type="submit" disabled={loading}>Save</Button>
-                </footer>
-            </NormalForm>
-        {:else if whichDialog === "currentSpeed"}
-            <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+                <label for="value">
+                    <span>Current Speed:</span>
+                    <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
+                </label>
+            {:else if whichDialog === "currentSpeed"}
                 <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
                 <input type="hidden" name="whichColumn" id="whichColumn" value="current_speed" />
                 <label for="current_speed">
                     <span>Current Speed:</span>
                     <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
                 </label>
-                <footer>
-                    <Button type="submit" disabled={loading}>Save</Button>
-                </footer>
-            </NormalForm>
-        {:else if whichDialog === "maxStamina"}
-            <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+            {:else if whichDialog === "maxStamina"}
                 <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
                 <input type="hidden" name="whichColumn" id="whichColumn" value="stamina" />
                 <label for="stamina">
                     <span>Max Stamina:</span>
                     <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
                 </label>
-                <footer>
-                    <Button type="submit" disabled={loading}>Save</Button>
-                </footer>
-            </NormalForm>
-        {:else if whichDialog === "currentStamina"}
-            <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+            {:else if whichDialog === "currentStamina"}
                 <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
                 <input type="hidden" name="whichColumn" id="whichColumn" value="current_stamina" />
                 <label for="current_stamina">
                     <span>Current Stamina:</span>
                     <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
                 </label>
-                <footer>
-                    <Button type="submit" disabled={loading}>Save</Button>
-                </footer>
-            </NormalForm>
-        {:else if whichDialog === "damage"}
-            <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+            {:else if whichDialog === "damage"}
                 <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
                 <input type="hidden" name="whichColumn" id="whichColumn" value="current_stamina" />
                 <input type="hidden" name="value" id="value" value={postDamageStamina} />
@@ -240,12 +237,7 @@
                     <span>Damage:</span>
                     <input type="number" name="damageQty" id="damageQty" bind:value={selectedStatValue} required />
                 </label>
-                <footer>
-                    <Button type="submit" disabled={loading}>Save</Button>
-                </footer>
-            </NormalForm>
-        {:else if whichDialog === "healing"}
-            <NormalForm method="post" action="?/saveColumn" fct={() => handleSubmit(loading, cleanupSubmit)}>
+            {:else if whichDialog === "healing"}
                 <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
                 <input type="hidden" name="whichColumn" id="whichColumn" value="current_stamina" />
                 <input type="hidden" name="value" id="value" value={postHealingStamina} />
@@ -253,11 +245,39 @@
                     <span>Healing:</span>
                     <input type="number" name="healingQty" id="healingQty" bind:value={selectedStatValue} required />
                 </label>
-                <footer>
-                    <Button type="submit" disabled={loading}>Save</Button>
-                </footer>
-            </NormalForm>
-        {/if}
+            {:else if whichDialog === "baseDodge"}
+                <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
+                <input type="hidden" name="whichColumn" id="whichColumn" value="dodge" />
+                <label for="value">
+                    <span>Base Dodge:</span>
+                    <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
+                </label>
+            {:else if whichDialog === "currentDodge"}
+                <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
+                <input type="hidden" name="whichColumn" id="whichColumn" value="current_dodge" />
+                <label for="value">
+                    <span>Current Dodge:</span>
+                    <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
+                </label>
+            {:else if whichDialog === "baseArmor"}
+                <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
+                <input type="hidden" name="whichColumn" id="whichColumn" value="armor" />
+                <label for="value">
+                    <span>Base Armor:</span>
+                    <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
+                </label>
+            {:else if whichDialog === "currentArmor"}
+                <input type="hidden" name="character_id" id="character_id" value={$page.data.character.id} />
+                <input type="hidden" name="whichColumn" id="whichColumn" value="current_armor" />
+                <label for="value">
+                    <span>Current Armor:</span>
+                    <input type="number" name="value" id="value" bind:value={selectedStatValue} required />
+                </label>
+            {/if}
+            <footer>
+                <Button type="submit" disabled={loading}>Save</Button>
+            </footer>
+        </NormalForm>
     </NormalDialog>
 </Dialog.Root>
 
