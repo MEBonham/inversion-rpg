@@ -197,11 +197,16 @@ export const actions = {
         }
 
         let skills = prevCharacter.character_skills ?? BASE_SKILLS;
-        const i = skills.findIndex((skill) => skill.skillName === formData.get("skillName"));
+        const soughtSkill = formData.get("skillName");
+        const i = skills.findIndex((skill) => skill.skillName === soughtSkill);
         if (i === -1) {
             return fail(500, { message: "Something went wrong." }, { src: "saveSkill" });
         }
-        skills[i].rank = parseInt(formData.get("newRank"));
+        if (soughtSkill === "GUNS") {
+            skills[i].rank = JSON.parse(formData.get("newRank"));
+        } else {
+            skills[i].rank = parseInt(formData.get("newRank"));
+        }
         const { error: updateError } = await supabase.from("characters")
             .update({ character_skills: skills })
             .eq("id", characterId);

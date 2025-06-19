@@ -19,7 +19,7 @@
                         {skill.skillName}
                     </h2>
                     <div class="body">
-                        {#each range as rank, index}
+                        {#each range as rank}
                             <div class="bubble" class:filled={rank <= skill.rank}></div>
                         {/each}
                     </div>

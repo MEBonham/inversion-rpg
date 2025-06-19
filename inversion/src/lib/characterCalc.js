@@ -36,6 +36,9 @@ export const calcSkillPoints = (character) => {
     for (const skill of skills.filter((skill) => skill.regular)) {
         totalSkillPoints += REGULAR_SKILL_PRICES[skill.rank];
     }
+    const guns = skills.filter((skill) => skill.skillName === "GUNS");
+    console.log(guns);
+    totalSkillPoints += 3 * (Object.keys(guns[0].rank).filter((key) => guns[0].rank[key]).length);
 
     return totalSkillPoints;
 }

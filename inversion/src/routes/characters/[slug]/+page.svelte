@@ -15,6 +15,7 @@
     import EditCharLanguages from "./EditCharLanguages.svelte";
     import NormalSkillsHeader from "./NormalSkillsHeader.svelte";
     import NormalSkillWidget from "./NormalSkillWidget.svelte";
+	import GunsSkillWidget from "./GunsSkillWidget.svelte";
 	import CurrentStatsTracker from "./CurrentStatsTracker.svelte";
 
     let { data } = $props();
@@ -133,95 +134,6 @@
                 {/if}
             </NormalDialog>
         </Dialog.Root>
-        <!-- <header id="sheetHeader">
-            <main>
-                <div>
-                    <ContextMenu.Root>
-                        <ContextMenu.Trigger>
-                            {#snippet child({ props })}
-                                <h2 {...props}>
-                                    <span>BACKGROUND{backgroundsMapped.length > 1 ? "S" : ""}:</span>
-                                    {#each backgroundsMapped as background, index}
-                                        {#if index !== 0}
-                                            <span>, </span>
-                                        {/if}
-                                        <span>{background.background_name}</span>
-                                    {/each}
-                                </h2>
-                            {/snippet}
-                        </ContextMenu.Trigger>
-                        {#if hasEditPermission}
-                            <Dialog.Root bind:open={backgroundsDialogIsOpen}>
-                                <ContextMenu.Trigger>
-                                    {#snippet child({ props })}
-                                        <Dialog.Trigger>
-                                            {#snippet child({ props2 })}
-                                                <button {...{ ...props, ...props2 }}>
-                                                    Edit Backgrounds
-                                                </button>
-                                            {/snippet}
-                                        </Dialog.Trigger>
-                                    {/snippet}
-                                </ContextMenu.Trigger>
-                            </Dialog.Root>
-                            <BufferDot />
-                        {/if}
-                    <h2>
-                        {#if hasEditPermission}
-                            <Dialog.Root bind:open={ancestriesDialogIsOpen}>
-                                <Dialog.Trigger>
-                                    {#snippet child({ props })}
-                                        <button class="h2lineup" {...props}>
-                                            <PencilEditIcon size="2.0rem" />
-                                        </button>
-                                    {/snippet}
-                                </Dialog.Trigger>
-                                <NormalDialog title="Edit Ancestries">
-                                    <EditCharAncestries action="?/saveAncestries" closeDialog={() => ancestriesDialogIsOpen = false} />
-                                </NormalDialog>
-                            </Dialog.Root>
-                            <BufferDot />
-                        {/if}
-                        <span>{ancestriesMapped.length > 1 ? "ANCESTRIES" : "ANCESTRY"}:</span>
-                        {#each ancestriesMapped as ancestry, index}
-                            {#if index !== 0}
-                                <span>, </span>
-                            {/if}
-                            <span>{ancestry.ancestry_name}</span>
-                        {/each}
-                    </h2>
-                </div>
-                <RumorsBox {hasEditPermission} curId={cur.id} {backstories} />
-            </main>
-            <footer>
-                <h2>
-                    {#if hasEditPermission}
-                        <Dialog.Root bind:open={languagesDialogIsOpen}>
-                            <Dialog.Trigger>
-                                {#snippet child({ props })}
-                                    <button class="h2lineup" {...props}>
-                                        <PencilEditIcon size="2.0rem" />
-                                    </button>
-                                {/snippet}
-                            </Dialog.Trigger>
-                            <NormalDialog title="Edit Languages">
-                                <EditCharLanguages action="?/saveLanguages" closeDialog={() => languagesDialogIsOpen = false} />
-                            </NormalDialog>
-                        </Dialog.Root>
-                        <BufferDot />
-                    {/if}
-                    <span>LANGUAGE{languagesMapped.length > 1 ? "S" : ""}:</span>
-                    {#each languagesMapped.sort((a, b) => a.language_name.localeCompare(b.language_name)) as language, index}
-                        {#if index !== 0}
-                            <span>, </span>
-                        {/if}
-                        <span>{language.language_name}</span>
-                    {/each}
-                </h2>
-                <div>
-                </div>
-            </footer>
-        </header> -->
         <main id="pg1main">
             <div id="pg1mainMisc">
                 <header>
@@ -231,6 +143,7 @@
                         {#each skillsMapped.filter((skill) => skill.category === "Combat" && skill.regular) as skill}
                             <NormalSkillWidget {skill} {hasEditPermission} />
                         {/each}
+                        <GunsSkillWidget {hasEditPermission} skill={skillsMapped.find((skill) => skill.skillName === "GUNS")} />
                     </section>
                 </header>
             </div>
