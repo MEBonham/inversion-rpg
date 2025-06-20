@@ -9,7 +9,6 @@
     import CheckboxTrueIcon from "$lib/components/icons/CheckboxTrueIcon.svelte";
 
     let { hasEditPermission, skill } = $props();
-    $inspect(skill.rank);
     const range = ["P", "R", "S", "5"];
     const rangeMeanings = {
         P: "pistols",

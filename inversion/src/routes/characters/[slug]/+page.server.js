@@ -180,6 +180,23 @@ export const actions = {
         
         return {};
     },
+    saveNotes: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        const characterId = formData.get("character_id");
+        if (!verifyEditPermission(supabase, getProfile, characterId)) {
+            return fail(403, { message: "Forbidden" }, { src: "saveNotes" });
+        }
+
+        const { error: updateError } = await supabase.from("characters")
+            .update({ notes: JSON.parse(formData.get("notes")) })
+            .eq("id", characterId);
+        if (updateError) {
+            console.error({ updateError });
+            return fail(500, { message: updateError.message || "Something went wrong." }, { src: "saveNotes" });
+        }
+        
+        return {};
+    },
     saveSkill: async ({ request, locals: { supabase, getProfile } }) => {
         const formData = await request.formData();
         const characterId = formData.get("character_id");

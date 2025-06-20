@@ -17,6 +17,7 @@
     import NormalSkillWidget from "./NormalSkillWidget.svelte";
 	import GunsSkillWidget from "./GunsSkillWidget.svelte";
 	import CurrentStatsTracker from "./CurrentStatsTracker.svelte";
+	import NotesWidget from "./NotesWidget.svelte";
 
     let { data } = $props();
     let profile = $derived(data.profile);
@@ -146,6 +147,7 @@
                         <GunsSkillWidget {hasEditPermission} skill={skillsMapped.find((skill) => skill.skillName === "GUNS")} />
                     </section>
                 </header>
+                <NotesWidget {hasEditPermission} />
             </div>
             <aside id="skillsCol">
                 <section id="socialSkills">
