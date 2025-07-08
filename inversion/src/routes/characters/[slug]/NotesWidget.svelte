@@ -38,7 +38,6 @@
             }
         }
     });
-
     
     let loading = $state(false);
     const cleanupSubmit = async () => {

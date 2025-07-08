@@ -7,12 +7,14 @@
     import NewAncestryForm from "./NewAncestryForm.svelte";
     import NewBackgroundForm from "./NewBackgroundForm.svelte";
     import NewLanguagesForm from "./NewLanguagesForm.svelte";
+    import NewItemForm from "./NewItemForm.svelte";
 
     let dialogsOpen = $state({
         languages: false,
         backgrounds: false,
         ancestries: false,
         activeAbilities: false,
+        items: false,
     });
     const closeDialog = (whichDialog) => dialogsOpen[whichDialog] = false;
 </script>
@@ -64,6 +66,17 @@
                 </Dialog.Trigger>
                 <NormalDialog title="New Active Ability">
                     <NewActiveAbilityForm action="?/newActiveAbility" closeDialog={() => closeDialog("activeAbilities")} />
+                </NormalDialog>
+            </Dialog.Root>
+            <BufferDot />
+            <Dialog.Root bind:open={dialogsOpen.items}>
+                <Dialog.Trigger>
+                    {#snippet child({ props })}
+                        <Button {...props}>Items</Button>
+                    {/snippet}
+                </Dialog.Trigger>
+                <NormalDialog title="New Item">
+                    <NewItemForm action="?/newItem" closeDialog={() => closeDialog("items")} />
                 </NormalDialog>
             </Dialog.Root>
         </section>

@@ -235,3 +235,49 @@ export const REGULAR_SKILL_PRICES = {
     4: 9,
     5: 12,
 };
+
+export const ITEM_CATEGORIES = [
+    "Armor",
+    "Shield",
+    "Weapon",
+    "Gun",
+    "Ammunition",
+    "Consumable",
+    "Gear Kit",
+    "Adventuring Gear",
+    "Mount",
+    "Magic Item",
+    "Tech Item",
+];
+
+export const ARMOR_TYPES = [
+    "N/A",
+    "Cloth",
+    "Light",
+    "Medium",
+    "Heavy",
+];
+
+export const SHIELD_TYPES = [
+    "Light",
+    "Heavy",
+];
+
+export const WEAPON_TYPES = [
+    "Unarmed",
+    "Axe",
+    "Bow",
+    "Crossbow",
+    "Dagger",
+    "Hammer",
+    "Spear",
+    "Stave",
+    "Sword",
+    "Whip",
+];
+
+export const GUN_TYPES = [
+    "Pistol",
+    "Rifle",
+    "Shotgun",
+];

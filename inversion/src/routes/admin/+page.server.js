@@ -139,6 +139,23 @@ export const actions = {
         }
         return {};
     },
+    newItem: async ({ request, locals: { supabase, getProfile } }) => {
+        const formData = await request.formData();
+        console.log(Object.fromEntries(formData.entries()));
+        const profile = await getProfile();
+        if (!profile || profile.auth_num < ADMIN_AUTH) {
+            throw error(403, "Forbidden");
+        }
+
+        const { error } = await supabase.from("items").insert(
+            Object.fromEntries(formData.entries())
+        );
+        if (error) {
+            console.error({ error });
+            return fail(500, { message: error.message || "Something went wrong." }, { src: "newItem" });
+        }
+        return {};
+    },
     newLanguage: async ({ request, locals: { supabase, getProfile } }) => {
         const formData = await request.formData();
         const profile = await getProfile();
