@@ -2,17 +2,28 @@
     import { page } from "$app/stores";
     import { Checkbox, DropdownMenu, Label } from "bits-ui";
     import { handleSubmit, sleep } from "$lib/utils";
-    import { ITEM_CATEGORIES, ARMOR_TYPES, SHIELD_TYPES, WEAPON_TYPES, GUN_TYPES } from "$lib/constants";
+    import {
+        ITEM_CATEGORIES,
+        ARMOR_TYPES,
+        SHIELD_TYPES,
+        WEAPON_TYPES,
+        GUN_TYPES,
+        AMMUNITION_TYPES,
+        AMMUNITION_GRADES,
+        CONSUMABLE_TYPES,
+    } from "$lib/constants";
     import NormalForm from "$lib/components/NormalForm.svelte";
     import Button from "$lib/components/Button.svelte";
     import CheckboxTrueIcon from "$lib/components/icons/CheckboxTrueIcon.svelte";
     import CheckboxFalseIcon from "$lib/components/icons/CheckboxFalseIcon.svelte";
+	import QuillEditor from "$lib/components/QuillEditor.svelte";
 
     let { action, closeDialog } = $props();
 
     let itemCategory = $state(null);
     let itemCategoryMenuOpen = $state(false);
     let typeMenuOpen = $state(false);
+    let gradeMenuOpen = $state(false);
     
     let costSilver = $state(null);
     let carrySpaces = $state(null);
@@ -28,7 +39,9 @@
     let property = $state(null);
     let weaponDamage = $state(null);
     let weaponCrit = $state(null);
-    let itemDescription = $state({});
+    let ammoGrade = $state(null);
+    let itemDescription = $state(null);
+    let itemDetails = $state({});
     let mountSize = $state(null);
     let mountSpeed = $state(null);
     let mountLoyalty = $state(null);
@@ -44,10 +57,13 @@
             return "Skilled";
         } else if (itemCategory === "Weapon") {
             return "Simple";
+        } else if (itemCategory === "Ammunition") {
+            return ammoGrade;
         } else {
             return null;
         }
     });
+    let dbFriendly = $derived(JSON.stringify(itemDetails));
 
     let loading = $state(false);
     const cleanupSubmit = async () => {
@@ -287,6 +303,90 @@
             <span>Property:</span>
             <input type="text" name="property" id="property" bind:value={property} />
         </label>
+    {:else if itemCategory === "Ammunition"}
+        <label for="name">
+            <span>Ammunition Name:</span>
+            <input type="text" name="item_name" id="item_name" required />
+        </label>
+        <DropdownMenu.Root bind:open={typeMenuOpen}>
+            <DropdownMenu.Trigger>
+                {#snippet child({ props })}
+                    <Button {...props}>
+                        {type || "Select Ammunition Type"}
+                    </Button>
+                {/snippet}
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content>
+                {#each AMMUNITION_TYPES as ammunitionType}
+                    <DropdownMenu.Item>
+                        {#snippet child({ props })}
+                            <div { ...props } onclick={() => { type = ammunitionType; typeMenuOpen = false; }}>
+                                {ammunitionType}
+                            </div>
+                        {/snippet}
+                    </DropdownMenu.Item>
+                {/each}
+            </DropdownMenu.Content>
+        </DropdownMenu.Root>
+        <DropdownMenu.Root bind:open={gradeMenuOpen}>
+            <DropdownMenu.Trigger>
+                {#snippet child({ props })}
+                    <Button {...props}>
+                        {grade || "Select Ammunition Grade"}
+                    </Button>
+                {/snippet}
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content>
+                {#each AMMUNITION_GRADES as ammunitionGrade}
+                    <DropdownMenu.Item>
+                        {#snippet child({ props })}
+                            <div { ...props } onclick={() => { ammoGrade = ammunitionGrade; gradeMenuOpen = false; }}>
+                                {ammunitionGrade}
+                            </div>
+                        {/snippet}
+                    </DropdownMenu.Item>
+                {/each}
+            </DropdownMenu.Content>
+        </DropdownMenu.Root>
+        <label for="weapon_damage">
+            <span>Damage:</span>
+            <input type="text" name="weapon_damage" id="weapon_damage" bind:value={weaponDamage} placeholder="D8 Piercing" />
+        </label>
+        <label for="property">
+            <span>Property:</span>
+            <input type="text" name="property" id="property" bind:value={property} />
+        </label>
+    {:else if itemCategory === "Consumable"}
+        <label for="name">
+            <span>Consumable Name:</span>
+            <input type="text" name="item_name" id="item_name" required />
+        </label>
+        <DropdownMenu.Root bind:open={typeMenuOpen}>
+            <DropdownMenu.Trigger>
+                {#snippet child({ props })}
+                    <Button {...props}>
+                        {type || "Select Consumable Type"}
+                    </Button>
+                {/snippet}
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content>
+                {#each CONSUMABLE_TYPES as consumableType}
+                    <DropdownMenu.Item>
+                        {#snippet child({ props })}
+                            <div { ...props } onclick={() => { type = consumableType; typeMenuOpen = false; }}>
+                                {consumableType}
+                            </div>
+                        {/snippet}
+                    </DropdownMenu.Item>
+                {/each}
+            </DropdownMenu.Content>
+        </DropdownMenu.Root>
+        <label for="item_description">
+            <span>Description:</span>
+            <input type="text" name="item_description" id="item_description" bind:value={itemDescription} />
+        </label>
+        <input type="hidden" name="item_details" id="item_details" value={dbFriendly} />
+        <QuillEditor bind:editor={itemDetails} index="itemDetails" />
     {/if}
     {#if itemCategory}
         <label for="carry_spaces">

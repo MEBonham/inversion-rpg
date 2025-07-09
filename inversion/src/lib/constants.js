@@ -281,3 +281,28 @@ export const GUN_TYPES = [
     "Rifle",
     "Shotgun",
 ];
+
+export const AMMUNITION_TYPES = [
+    "Arrows",
+    "Bolts",
+    "Stones",
+    "Rounds",
+    "Cartridges",
+    "Shells",
+];
+
+export const AMMUNITION_GRADES = [
+    "Basic: Poor Quality",
+    "Basic: Regular",
+    "Basic: Masterwork",
+    "Basic: Military",
+    "Basic: Hunter",
+    "Non-Basic",
+];
+
+export const CONSUMABLE_TYPES = [
+    "Tech",
+    "Potion",
+    "Scroll",
+    "Other",
+];
